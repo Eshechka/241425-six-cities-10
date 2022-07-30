@@ -57,7 +57,7 @@ function Main(props: mainProps): JSX.Element {
           </section>
         </div>
         <div className="cities">
-          {!props.offers.length ?
+          {props.offers.length ?
             (
               <div className="cities__places-container container">
                 <section className="cities__places places">
