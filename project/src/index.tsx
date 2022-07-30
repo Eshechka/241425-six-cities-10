@@ -1,17 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/app/app';
+import { AuthorizationStatus } from './const';
+import { offers } from './mocks/offers';
+import { reviews } from './mocks/reviews';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 
 const Settings = {
-  PLACES_COUNT: 5,
+  offers: offers,
+  reviews: reviews,
+  authStatus: AuthorizationStatus.Auth,
 };
+
 
 root.render(
   <React.StrictMode>
-    <App placesCount={Settings.PLACES_COUNT}/>
+    <App
+      offers={Settings.offers}
+      reviews={Settings.reviews}
+      authStatus={Settings.authStatus}
+    />
   </React.StrictMode>,
 );
