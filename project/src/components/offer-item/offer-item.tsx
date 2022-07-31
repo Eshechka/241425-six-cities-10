@@ -7,7 +7,7 @@ import { Offer } from '../../types/offer';
 type offerItemProps = {
   offer: Offer,
   onMouseOver?: () => void,
-  view?: OfferItemViews,
+  view: OfferItemViews,
 };
 
 function OfferItem(props: offerItemProps): JSX.Element {
@@ -18,18 +18,17 @@ function OfferItem(props: offerItemProps): JSX.Element {
       'near-places__card': props.view === 'near',
     })} onMouseOver={props.onMouseOver}
     >
-      {props.offer.isPremium ?
+      {props.offer.isPremium &&
         <div className="place-card__mark">
           <span>Premium</span>
-        </div> :
-        null}
+        </div>}
       <div className={cn('place-card__image-wrapper', {
         'favorites__image-wrapper': props.view === 'favorite',
         'cities__image-wrapper': props.view === 'standart',
         'near-places__image-wrapper': props.view === 'near',
       })}
       >
-        <Link to={`room/${props.offer.id}`}>
+        <Link to={`offer/${props.offer.id}`}>
           <img className="place-card__image"
             src={props.offer.src}
             width={props.view === 'favorite' ? 150 : 260}
