@@ -1,43 +1,37 @@
 import cn from 'classnames';
 import { Link } from 'react-router-dom';
-import { AppRoute, OfferItemViews } from '../../const';
+import { AppRoute } from '../../const';
 
 import { Offer } from '../../types/offer';
 
 type offerItemProps = {
   offer: Offer,
   onMouseOver?: () => void,
-  view: OfferItemViews,
+  articleClassName?: string,
+  imgWrapperClassName?: string,
+  cardInfoClassName? : string,
+  imgWidth?: number,
+  imgHeight?: number,
 };
 
 function OfferItem(props: offerItemProps): JSX.Element {
   return (
-    <article className={cn('place-card', {
-      'favorites__card': props.view === 'favorite',
-      'cities__card': props.view === 'standart',
-      'near-places__card': props.view === 'near',
-    })} onMouseOver={props.onMouseOver}
-    >
+    <article className={['place-card', props.articleClassName].join(' ')} onMouseOver={props.onMouseOver}>
       {props.offer.isPremium &&
         <div className="place-card__mark">
           <span>Premium</span>
         </div>}
-      <div className={cn('place-card__image-wrapper', {
-        'favorites__image-wrapper': props.view === 'favorite',
-        'cities__image-wrapper': props.view === 'standart',
-        'near-places__image-wrapper': props.view === 'near',
-      })}
-      >
+      <div className={['place-card__image-wrapper', props.imgWrapperClassName].join(' ')}>
         <Link to={`offer/${props.offer.id}`}>
           <img className="place-card__image"
             src={props.offer.src}
-            width={props.view === 'favorite' ? 150 : 260}
-            height={props.view === 'favorite' ? 110 : 200}
+            width={props.imgWidth || 260}
+            height={props.imgHeight || 200}
             alt="Place image"
           />
         </Link>
       </div>
-      <div className={cn('place-card__info', {'favorites__card-info': props.view === 'favorite'})}>
+      <div className={['place-card__info', props.cardInfoClassName].join(' ')}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">&euro;{props.offer.price}</b>

@@ -1,8 +1,8 @@
 import Header from '../../components/header/header';
 
-import OfferItem from '../../components/offer-item/offer-item';
+import OfferItemFavorite from '../../components/offer-item-favorite/offer-item-favorite';
 
-import { AuthorizationStatus, OfferItemViews } from '../../const';
+import { AuthorizationStatus } from '../../const';
 
 import { Offer } from '../../types/offer';
 
@@ -35,16 +35,17 @@ function Favorites(props: favoritesProps): JSX.Element {
                       </a>
                     </div>
                   </div>
-                  {props.offers
-                    .filter((favoriteOffer : Offer) => favoriteOffer.city.name === city)
-                    .map((favoriteOffer : Offer) => (
-                      <OfferItem
-                        key={favoriteOffer.id}
-                        offer={favoriteOffer}
-                        view={OfferItemViews.Favorite}
-                      />
-                    )
-                    )}
+                  <div className="favorites__places">
+                    {props.offers
+                      .filter((favoriteOffer : Offer) => favoriteOffer.city.name === city)
+                      .map((favoriteOffer : Offer) => (
+                        <OfferItemFavorite
+                          key={favoriteOffer.id}
+                          offer={favoriteOffer}
+                        />
+                      )
+                      )}
+                  </div>
                 </li>)
               )}
             </ul>
