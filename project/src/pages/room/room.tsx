@@ -2,11 +2,11 @@ import { useParams } from 'react-router-dom';
 
 import Header from '../../components/header/header';
 import Map from '../../components/map/map';
-import OfferItem from '../../components/offer-item/offer-item';
+import OfferItemNear from '../../components/offer-item-near/offer-item-near';
 import ReviewForm from '../../components/review-form/review-form';
 import ReviewList from '../../components/review-list/review-list';
 
-import { AuthorizationStatus, OfferItemViews } from '../../const';
+import { AuthorizationStatus } from '../../const';
 
 import { Offer } from '../../types/offer';
 import { Review } from '../../types/review';
@@ -118,10 +118,9 @@ function Room(props: roomProps): JSX.Element {
             <div className="near-places__list places__list">
               {nearRooms.map((offer) =>
                 (
-                  <OfferItem
+                  <OfferItemNear
                     key={offer.id}
                     offer={offer}
-                    view={OfferItemViews.Near}
                   />)
               )}
             </div>
