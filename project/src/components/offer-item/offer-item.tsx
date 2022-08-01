@@ -7,21 +7,35 @@ import { Offer } from '../../types/offer';
 type offerItemProps = {
   offer: Offer,
   onMouseOver?: () => void,
-  view?: OfferItemViews,
+  view: OfferItemViews,
 };
 
 function OfferItem(props: offerItemProps): JSX.Element {
   return (
-    <article className={cn('place-card', {'favorites__card': props.view === 'favorite', 'cities__card': props.view === 'standart',})} onMouseOver={props.onMouseOver}>
-      {props.offer.isPremium ?
+    <article className={cn('place-card', {
+      'favorites__card': props.view === 'favorite',
+      'cities__card': props.view === 'standart',
+      'near-places__card': props.view === 'near',
+    })} onMouseOver={props.onMouseOver}
+    >
+      {props.offer.isPremium &&
         <div className="place-card__mark">
           <span>Premium</span>
-        </div> :
-        null}
-      <div className={cn('place-card__image-wrapper', {'favorites__image-wrapper': props.view === 'favorite', 'cities__image-wrapper': props.view === 'standart',})}>
-        <a href="#">
-          <img className="place-card__image" src={props.offer.src} width={props.view === 'favorite' ? 150 : 260} height={props.view === 'favorite' ? 110 : 200} alt="Place image"/>
-        </a>
+        </div>}
+      <div className={cn('place-card__image-wrapper', {
+        'favorites__image-wrapper': props.view === 'favorite',
+        'cities__image-wrapper': props.view === 'standart',
+        'near-places__image-wrapper': props.view === 'near',
+      })}
+      >
+        <Link to={`offer/${props.offer.id}`}>
+          <img className="place-card__image"
+            src={props.offer.src}
+            width={props.view === 'favorite' ? 150 : 260}
+            height={props.view === 'favorite' ? 110 : 200}
+            alt="Place image"
+          />
+        </Link>
       </div>
       <div className={cn('place-card__info', {'favorites__card-info': props.view === 'favorite'})}>
         <div className="place-card__price-wrapper">
@@ -29,7 +43,7 @@ function OfferItem(props: offerItemProps): JSX.Element {
             <b className="place-card__price-value">&euro;{props.offer.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className={props.offer.isFavorite ? 'place-card__bookmark-button button place-card__bookmark-button--active' : 'place-card__bookmark-button button'} type="button">
+          <button className={cn('place-card__bookmark-button button', {'place-card__bookmark-button--active': props.offer.isFavorite})} type="button">
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>

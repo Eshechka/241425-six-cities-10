@@ -13,11 +13,15 @@ export const offers: Offer[] = [
     city: {
       name: 'Amsterdam',
       location: {
-        latitude: 51.225402,
-        longitude: 6.776314,
-        zoom: 13
+        latitude: 52.3909553943508,
+        longitude: 4.85309666406198,
+        zoom: 20
       }
     },
+    location: {
+      latitude: 52.3747515,
+      longitude: 4.8908885,
+    }
   },
   {
     id: '2',
@@ -31,12 +35,16 @@ export const offers: Offer[] = [
     city: {
       name: 'Amsterdam',
       location: {
-        latitude: 51.225402,
-        longitude: 6.776314,
-        zoom: 13
+        latitude: 52.369553943508,
+        longitude: 4.85309666406198,
+        zoom: 20
       }
     },
     isPremium: true,
+    location: {
+      latitude: 52.37624,
+      longitude: 4.891647,
+    }
   },
   {
     id: '3',
@@ -50,11 +58,15 @@ export const offers: Offer[] = [
     city: {
       name: 'Amsterdam',
       location: {
-        latitude: 51.225402,
-        longitude: 6.776314,
-        zoom: 13
+        latitude: 52.3909553943508,
+        longitude: 4.929309666406198,
+        zoom: 20
       }
     },
+    location: {
+      latitude: 52.3809543943508,
+      longitude: 4.939304666406198,
+    }
   },
   {
     id: '4',
@@ -66,11 +78,11 @@ export const offers: Offer[] = [
     description: 'Nice, cozy, warm big bed apartment',
     type: 'Apartment',
     city: {
-      name: 'Cologne',
+      name: 'Amsterdam',
       location: {
-        latitude: 51.225402,
-        longitude: 6.776314,
-        zoom: 13
+        latitude: 52.3809553943508,
+        longitude: 4.939309666406198,
+        zoom: 20
       }
     },
     isPremium: true,
@@ -94,6 +106,52 @@ export const offers: Offer[] = [
       avatarUrl: 'img/avatar-angelina.jpg',
       isPro: true,
       name: 'Angelina',
+    },
+    location: {
+      latitude: 52.373463,
+      longitude: 4.893452,
+    }
+  },
+  {
+    id: '5',
+    src: 'img/apartment-03.jpg',
+    price: 280,
+    isFavorite: true,
+    rating: 100,
+    title: 'Penthouse, 4-5 rooms + 5 balconies',
+    description: 'Nice, cozy, warm big bed apartment',
+    type: 'Apartment',
+    city: {
+      name: 'Cologne',
+      location: {
+        latitude: 52.3809553943508,
+        longitude: 4.939309666406198,
+        zoom: 20
+      }
+    },
+    isPremium: true,
+    images: ['img/apartment-02.jpg', 'https://10.react.pages.academy/static/hotel/8.jpg'],
+    bedrooms: 3,
+    maxAdults: 4,
+    goods: [
+      'Wi-Fi',
+      'Washing machine',
+      'Towels',
+      'Heating',
+      'Kitchen',
+      'Dishwasher',
+      'Cabel TV',
+      'Fridge',
+    ],
+    host: {
+      id: '11',
+      avatarUrl: 'img/avatar-angelina.jpg',
+      isPro: true,
+      name: 'Angelina',
+    },
+    location: {
+      latitude: 52.373463,
+      longitude: 4.893452,
     }
   },
 ];
