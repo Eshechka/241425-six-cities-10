@@ -1,3 +1,5 @@
+import { Offer } from './types/offer';
+
 export enum AppRoute {
   Root = '/',
   Login = '/login',
@@ -78,3 +80,7 @@ export const CITIES = [
     }
   },
 ];
+
+export const sortPriceDesc = (offerA: Offer, offerB: Offer) => offerB.price - offerA.price;
+export const sortPriceAsc = (offerA: Offer, offerB: Offer) => offerA.price - offerB.price;
+export const sortRatingDesc = (offerA: Offer, offerB: Offer) => offerB.rating - offerA.rating;

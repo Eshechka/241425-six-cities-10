@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import Header from '../../components/header/header';
 import Map from '../../components/map/map';
 import OfferList from '../../components/offer-list/offer-list';
+import Sorting from '../../components/sorting/sorting';
 import Tabs from '../../components/tabs/tabs';
-import { AuthorizationStatus, CITIES, FilterType } from '../../const';
+import { AuthorizationStatus, CITIES, sortPriceAsc, sortPriceDesc, sortRatingDesc } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { updateOffers } from '../../store/action';
 
@@ -21,10 +22,10 @@ function Main(props: mainProps): JSX.Element {
   const dispatch = useAppDispatch();
 
   const [currentCity, setCurrentCity] = useState(useAppSelector((state) => state.city));
-  const [currentCityOffers, setCurrentCityOffers] = useState(useAppSelector((state) => state.offers).filter((offer) => offer.city.name === currentCity.name));
-  const [currentPoints, setCurrentPoints] = useState(currentCityOffers.map((offer) => offer.city.location));
-  const [currentFilter, serCurrentFilter] = useState(FilterType[0]);
-  const [isOpenFilter, setIsOpenFilter] = useState(false);
+  const initialCurrentCityOffers = useAppSelector((state) => state.offers).filter((offer) => offer.city.name === currentCity.name);
+  const [currentCityOffers, setCurrentCityOffers] = useState(initialCurrentCityOffers);
+  const [currentPoints, setCurrentPoints] = useState(currentCityOffers.map((offer) => ({location: offer.location, id: offer.id}) ));
+  const [hoveredOffer, setHoveredOffer] = useState('');
 
   const onChangeTab = (city: City) => {
     setCurrentCity(city);
@@ -32,9 +33,40 @@ function Main(props: mainProps): JSX.Element {
     setCurrentCityOffers(props.offers.filter((offer) => offer.city.name === city.name));
   };
 
+  const onSort = (filterType: string) => {
+    switch (filterType) {
+      case 'Price: low to high':
+        setCurrentCityOffers(initialCurrentCityOffers.sort(sortPriceAsc));
+        break;
+      case 'Price: high to low':
+        setCurrentCityOffers(initialCurrentCityOffers.sort(sortPriceDesc));
+        break;
+      case 'Top rated first':
+        setCurrentCityOffers(initialCurrentCityOffers.sort(sortRatingDesc));
+        break;
+      case 'Popular':
+      default:
+        setCurrentCityOffers(initialCurrentCityOffers);
+        break;
+    }
+  };
+
+  const onHoverOffer = (id: string) => {
+
+    if (id !== hoveredOffer) {
+      setHoveredOffer(id);
+    }
+  };
+  const onUnhoverOffer = (id: string) => {
+
+    if (id === hoveredOffer) {
+      setHoveredOffer('');
+    }
+  };
+
 
   useEffect(() => {
-    setCurrentPoints(currentCityOffers.map((offer) => offer.city.location));
+    setCurrentPoints(currentCityOffers.map((offer) => ({location: offer.city.location, id: offer.id})));
   }, [currentCityOffers]);
 
   return (
@@ -53,45 +85,15 @@ function Main(props: mainProps): JSX.Element {
                 <section className="cities__places places">
                   <h2 className="visually-hidden">Places</h2>
                   <b className="places__found">{currentCityOffers.length} places to stay in {currentCity.name}</b>
-                  <form className="places__sorting" action="#" method="get">
-                    <span className="places__sorting-caption">Sort by </span>
-                    <span
-                      className="places__sorting-type"
-                      tabIndex={0}
-                      onClick={() => setIsOpenFilter(!isOpenFilter)}
-                    >
-                      {currentFilter}
-                      <svg className="places__sorting-arrow" width="7" height="4">
-                        <use xlinkHref="#icon-arrow-select"></use>
-                      </svg>
-                    </span>
-                    <ul className={cn('places__options places__options--custom', {'places__options--opened': isOpenFilter})}>
-                      {
-                        FilterType.map((filterType) => (
-                          <li
-                            key={filterType}
-                            className={cn('places__option', {'places__option--active':  currentFilter === filterType})}
-                            tabIndex={0}
-                            onClick={
-                              () => {
-                                serCurrentFilter(filterType);
-                                setIsOpenFilter(false);
-                              }
-                            }
-                          >
-                            {filterType}
-                          </li>
-                        ))
-                      }
-                    </ul>
-                  </form>
 
-                  <OfferList offers={currentCityOffers} />
+                  <Sorting onSort={ onSort } />
+
+                  <OfferList offers={currentCityOffers} onMouseOver={onHoverOffer} onMouseLeave={onUnhoverOffer} />
 
                 </section>
                 <div className="cities__right-section">
                   <section className="cities__map map">
-                    <Map city={currentCity} points={currentPoints}/>
+                    <Map city={currentCity} points={currentPoints} activePointId={hoveredOffer}/>
                   </section>
                 </div>
               </div>

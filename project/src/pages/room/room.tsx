@@ -109,7 +109,7 @@ function Room(props: roomProps): JSX.Element {
             </div>
           </div>
           <section className="property__map map">
-            <Map city={room?.city} points={[room.location, ...nearRooms.map((nearRoom) => nearRoom.location)]}/>
+            <Map city={room?.city} points={[{id: room.id, location: room.location}, ...nearRooms.map((nearRoom) => ({location: nearRoom.location, id: nearRoom.id}) )]}/>
           </section>
         </section>
         <div className="container">

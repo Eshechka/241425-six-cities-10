@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import { useEffect, useRef } from 'react';
 import useMap from '../../hooks/use-map/use-map';
 
-import { URL_MARKER_DEFAULT } from '../../const';
+import { URL_MARKER_DEFAULT, URL_MARKER_CURRENT } from '../../const';
 
 
 import { City } from '../../types/city';
@@ -13,7 +13,11 @@ import { Coords } from '../../types/location';
 
 type mapProps = {
   city: City,
-  points: Coords[],
+  points: {
+    location: Coords,
+    id: string,
+  }[],
+  activePointId?: string | null,
 };
 
 function Map(props: mapProps): JSX.Element {
@@ -26,20 +30,27 @@ function Map(props: mapProps): JSX.Element {
     iconAnchor: [19, 39],
   });
 
+  const currentCustomIcon = leaflet.icon({
+    iconUrl: URL_MARKER_CURRENT,
+    iconSize: [27, 39],
+    iconAnchor: [19, 39],
+  });
+
   useEffect(() => {
     if (map) {
-      props.points.forEach((point) => {
-        leaflet
-          .marker({
-            lat: point.latitude,
-            lng: point.longitude,
-          }, {
-            icon: defaultCustomIcon,
-          })
-          .addTo(map);
-      });
+      props.points
+        .forEach((point) => {
+          leaflet
+            .marker({
+              lat: point.location.latitude,
+              lng: point.location.longitude,
+            }, {
+              icon: point.id === props.activePointId ? currentCustomIcon : defaultCustomIcon,
+            })
+            .addTo(map);
+        });
     }
-  }, [map, props.points]);
+  }, [map, props.points, props.activePointId]);
 
   return (
     <div
