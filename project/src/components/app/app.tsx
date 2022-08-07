@@ -10,24 +10,25 @@ import Main from '../../pages/main/main';
 import Room from '../../pages/room/room';
 import NotFound from '../../pages/not-found/not-found';
 
-import { Offer } from '../../types/offer';
 import { Review } from '../../types/review';
+import { useAppSelector } from '../../hooks';
 
 type Settings = {
-  offers: Offer[],
   reviews: Review[],
   authStatus: AuthorizationStatus,
 }
 
 function App(props: Settings): JSX.Element {
-  const favoriteOffers = props.offers.filter((favoriteOffer) => favoriteOffer.isFavorite === true);
+  const offers = useAppSelector((state) => state.offers);
+
+  const favoriteOffers = offers.filter((favoriteOffer) => favoriteOffer.isFavorite === true);
 
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path={AppRoute.Root}
-          element={<Main offers={props.offers} authStatus={props.authStatus} />}
+          element={<Main offers={offers} authStatus={props.authStatus} />}
         />
         <Route
           path={AppRoute.Login}
@@ -43,7 +44,7 @@ function App(props: Settings): JSX.Element {
         />
         <Route path={AppRoute.Room}>
           <Route index element={<Navigate to={AppRoute.Root} />} />
-          <Route path=':id' element={<Room offers={props.offers} reviews={props.reviews} authStatus={props.authStatus}/>} />
+          <Route path=':id' element={<Room offers={offers} reviews={props.reviews} authStatus={props.authStatus}/>} />
         </Route>
         <Route
           path="*"

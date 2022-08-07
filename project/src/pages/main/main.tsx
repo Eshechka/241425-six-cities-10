@@ -7,9 +7,9 @@ import OfferList from '../../components/offer-list/offer-list';
 import Tabs from '../../components/tabs/tabs';
 import { AuthorizationStatus, CITIES, FilterType } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { getOffers } from '../../store/action';
-import { City } from '../../types/city';
+import { updateOffers } from '../../store/action';
 
+import { City } from '../../types/city';
 import { Offer } from '../../types/offer';
 
 type mainProps = {
@@ -28,7 +28,7 @@ function Main(props: mainProps): JSX.Element {
 
   const onChangeTab = (city: City) => {
     setCurrentCity(city);
-    dispatch(getOffers( {offers: props.offers} ));
+    dispatch(updateOffers( {offers: props.offers} ));
     setCurrentCityOffers(props.offers.filter((offer) => offer.city.name === city.name));
   };
 

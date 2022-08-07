@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { offers as mockOffers } from '../mocks/offers';
-import { changeCity, getOffers } from './action';
+import { changeCity, updateOffers } from './action';
 
 const INIT_CITY_NAME = 'Paris';
 
@@ -13,7 +13,7 @@ const initialState = {
       zoom: 13
     },
   },
-  offers: mockOffers.filter((offer) => offer.city.name === INIT_CITY_NAME),
+  offers: mockOffers,
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -23,7 +23,7 @@ const reducer = createReducer(initialState, (builder) => {
 
       state.city = city;
     })
-    .addCase(getOffers, (state, action) => {
+    .addCase(updateOffers, (state, action) => {
       const { offers } = action.payload;
 
       state.offers = offers;

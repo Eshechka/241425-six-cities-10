@@ -4,7 +4,7 @@ export type Location = {
   zoom: number;
 }
 
-export type Location2 = {
+export type Coords = {
   latitude: number;
   longitude: number;
 }
