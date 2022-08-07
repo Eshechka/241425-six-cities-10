@@ -1,6 +1,6 @@
 import { City } from './city';
 import { Host } from './host';
-import { Location } from './location';
+import { Coords } from './location';
 
 export type Offer = {
   id: string;
@@ -18,6 +18,6 @@ export type Offer = {
   maxAdults?: number,
   goods?: string[],
   host?: Host,
-  location: Location;
+  location: Coords;
 };
 

@@ -10,6 +10,12 @@ export enum AuthorizationStatus {
   Auth = 'AUTH',
 }
 
+export const FilterType = [
+  'Popular',
+  'Price: low to high',
+  'Price: high to low',
+  'Top rated first'
+];
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 export const formatDate = (data: string): string => {

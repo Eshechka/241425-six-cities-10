@@ -5,9 +5,11 @@ import Header from '../../components/header/header';
 import Map from '../../components/map/map';
 import OfferList from '../../components/offer-list/offer-list';
 import Tabs from '../../components/tabs/tabs';
-import { AuthorizationStatus, CITIES } from '../../const';
-import { City } from '../../types/city';
+import { AuthorizationStatus, CITIES, FilterType } from '../../const';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { updateOffers } from '../../store/action';
 
+import { City } from '../../types/city';
 import { Offer } from '../../types/offer';
 
 type mainProps = {
@@ -16,15 +18,20 @@ type mainProps = {
 };
 
 function Main(props: mainProps): JSX.Element {
+  const dispatch = useAppDispatch();
 
-  const [currentCity, setCurrentCity] = useState(props.offers[0].city);
-  const [currentCityOffers, setCurrentCityOffers] = useState(props.offers.filter((offer) => offer.city.name === currentCity.name));
+  const [currentCity, setCurrentCity] = useState(useAppSelector((state) => state.city));
+  const [currentCityOffers, setCurrentCityOffers] = useState(useAppSelector((state) => state.offers).filter((offer) => offer.city.name === currentCity.name));
   const [currentPoints, setCurrentPoints] = useState(currentCityOffers.map((offer) => offer.city.location));
+  const [currentFilter, serCurrentFilter] = useState(FilterType[0]);
+  const [isOpenFilter, setIsOpenFilter] = useState(false);
 
   const onChangeTab = (city: City) => {
     setCurrentCity(city);
+    dispatch(updateOffers( {offers: props.offers} ));
     setCurrentCityOffers(props.offers.filter((offer) => offer.city.name === city.name));
   };
+
 
   useEffect(() => {
     setCurrentPoints(currentCityOffers.map((offer) => offer.city.location));
@@ -47,18 +54,35 @@ function Main(props: mainProps): JSX.Element {
                   <h2 className="visually-hidden">Places</h2>
                   <b className="places__found">{currentCityOffers.length} places to stay in {currentCity.name}</b>
                   <form className="places__sorting" action="#" method="get">
-                    <span className="places__sorting-caption">Sort by</span>
-                    <span className="places__sorting-type" tabIndex={0}>
-                      Popular
+                    <span className="places__sorting-caption">Sort by </span>
+                    <span
+                      className="places__sorting-type"
+                      tabIndex={0}
+                      onClick={() => setIsOpenFilter(!isOpenFilter)}
+                    >
+                      {currentFilter}
                       <svg className="places__sorting-arrow" width="7" height="4">
                         <use xlinkHref="#icon-arrow-select"></use>
                       </svg>
                     </span>
-                    <ul className="places__options places__options--custom places__options--opened">
-                      <li className="places__option places__option--active" tabIndex={0}>Popular</li>
-                      <li className="places__option" tabIndex={0}>Price: low to high</li>
-                      <li className="places__option" tabIndex={0}>Price: high to low</li>
-                      <li className="places__option" tabIndex={0}>Top rated first</li>
+                    <ul className={cn('places__options places__options--custom', {'places__options--opened': isOpenFilter})}>
+                      {
+                        FilterType.map((filterType) => (
+                          <li
+                            key={filterType}
+                            className={cn('places__option', {'places__option--active':  currentFilter === filterType})}
+                            tabIndex={0}
+                            onClick={
+                              () => {
+                                serCurrentFilter(filterType);
+                                setIsOpenFilter(false);
+                              }
+                            }
+                          >
+                            {filterType}
+                          </li>
+                        ))
+                      }
                     </ul>
                   </form>
 

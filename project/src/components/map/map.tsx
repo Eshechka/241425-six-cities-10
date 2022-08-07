@@ -8,12 +8,12 @@ import { URL_MARKER_DEFAULT } from '../../const';
 
 
 import { City } from '../../types/city';
-import { Location } from '../../types/location';
+import { Coords } from '../../types/location';
 
 
 type mapProps = {
   city: City,
-  points: Location[],
+  points: Coords[],
 };
 
 function Map(props: mapProps): JSX.Element {
