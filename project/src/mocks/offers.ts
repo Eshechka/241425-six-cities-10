@@ -28,7 +28,7 @@ export const offers: Offer[] = [
     src: 'img/apartment-01.jpg',
     price: 120,
     isFavorite: true,
-    rating: 90,
+    rating: 50,
     title: 'Penthouse, 4-5 rooms + 5 balconies',
     description: 'Wood and stone place',
     type: 'Private room',
@@ -49,7 +49,7 @@ export const offers: Offer[] = [
   {
     id: '3',
     src: 'img/apartment-02.jpg',
-    price: 132,
+    price: 32,
     isFavorite: false,
     rating: 75,
     title: 'Penthouse, 4-5 rooms + 5 balconies',

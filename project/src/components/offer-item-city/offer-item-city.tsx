@@ -5,6 +5,7 @@ import OfferItem from '../offer-item/offer-item';
 type offerItemCityProps = {
   offer: Offer,
   onMouseOver?: () => void,
+  onMouseLeave?: () => void,
 };
 
 function OfferItemCity(props: offerItemCityProps): JSX.Element {
