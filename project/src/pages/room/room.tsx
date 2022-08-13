@@ -6,7 +6,7 @@ import OfferItemNear from '../../components/offer-item-near/offer-item-near';
 import ReviewForm from '../../components/review-form/review-form';
 import ReviewList from '../../components/review-list/review-list';
 
-import { AuthorizationStatus } from '../../const';
+import { useAppSelector } from '../../hooks';
 
 import { Offer } from '../../types/offer';
 import { Review } from '../../types/review';
@@ -14,10 +14,10 @@ import { Review } from '../../types/review';
 type roomProps = {
   offers: Offer[],
   reviews: Review[],
-  authStatus: AuthorizationStatus,
 }
 
 function Room(props: roomProps): JSX.Element {
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const { id } = useParams();
 
   const room = props.offers.filter((offer) => offer.id === id)[0];
@@ -26,7 +26,7 @@ function Room(props: roomProps): JSX.Element {
 
   return (
     <div className="page">
-      <Header authStatus={props.authStatus}/>
+      <Header authStatus={authorizationStatus}/>
 
       <main className="page__main page__main--property">
         <section className="property">
@@ -104,7 +104,7 @@ function Room(props: roomProps): JSX.Element {
               </div>
               <section className="property__reviews reviews">
                 <ReviewList reviews={roomReviews}/>
-                {props.authStatus === AuthorizationStatus.Auth ? <ReviewForm/> : null}
+                {authorizationStatus && <ReviewForm/>}
               </section>
             </div>
           </div>

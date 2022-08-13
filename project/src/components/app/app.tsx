@@ -1,6 +1,6 @@
 import {Route, BrowserRouter, Routes, Navigate} from 'react-router-dom';
 
-import { AppRoute, AuthorizationStatus } from '../../const';
+import { AppRoute } from '../../const';
 
 import PrivateRoute from '../private-route/private-route';
 
@@ -16,13 +16,10 @@ import { useAppSelector } from '../../hooks';
 
 type Settings = {
   reviews: Review[],
-  authStatus: AuthorizationStatus,
 }
 
 function App(props: Settings): JSX.Element {
-  const {offers, isDataLoaded} = useAppSelector((state) => state);
-
-  const favoriteOffers = offers?.filter((favoriteOffer) => favoriteOffer.isFavorite === true);
+  const {offers, favoriteOffers, isDataLoaded, authorizationStatus} = useAppSelector((state) => state);
 
   if (!isDataLoaded) {
     return (
@@ -35,27 +32,27 @@ function App(props: Settings): JSX.Element {
       <Routes>
         <Route
           path={AppRoute.Root}
-          element={<Main offers={offers} authStatus={props.authStatus} />}
+          element={<Main offers={offers} />}
         />
         <Route
           path={AppRoute.Login}
-          element={props.authStatus === AuthorizationStatus.NoAuth ? <Login authStatus={props.authStatus} /> : <Navigate to={AppRoute.Root} />}
+          element={!authorizationStatus ? <Login /> : <Navigate to={AppRoute.Root} />}
         />
         <Route
           path={AppRoute.Favorites}
           element={
-            <PrivateRoute authorizationStatus={props.authStatus} >
-              <Favorites offers={favoriteOffers} authStatus={props.authStatus} />
+            <PrivateRoute>
+              <Favorites offers={favoriteOffers} />
             </PrivateRoute>
           }
         />
         <Route path={AppRoute.Room}>
           <Route index element={<Navigate to={AppRoute.Root} />} />
-          <Route path=':id' element={<Room offers={offers} reviews={props.reviews} authStatus={props.authStatus}/>} />
+          <Route path=':id' element={<Room offers={offers} reviews={props.reviews} />} />
         </Route>
         <Route
           path="*"
-          element={<NotFound authStatus={props.authStatus} />}
+          element={<NotFound />}
         />
       </Routes>
     </BrowserRouter>

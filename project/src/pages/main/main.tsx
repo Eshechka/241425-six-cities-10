@@ -7,7 +7,7 @@ import OfferList from '../../components/offer-list/offer-list';
 import Sorting from '../../components/sorting/sorting';
 import Tabs from '../../components/tabs/tabs';
 
-import { AuthorizationStatus, CITIES, sortPriceAsc, sortPriceDesc, sortRatingDesc } from '../../const';
+import { CITIES, sortPriceAsc, sortPriceDesc, sortRatingDesc } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setOffers } from '../../store/action';
 
@@ -16,10 +16,10 @@ import { Offer } from '../../types/offer';
 
 type mainProps = {
   offers: Offer[],
-  authStatus: AuthorizationStatus,
 };
 
 function Main(props: mainProps): JSX.Element {
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const dispatch = useAppDispatch();
 
   const [currentCity, setCurrentCity] = useState(useAppSelector((state) => state.city));
@@ -67,12 +67,12 @@ function Main(props: mainProps): JSX.Element {
 
 
   useEffect(() => {
-    setCurrentPoints(currentCityOffers.map((offer) => ({location: offer.city.location, id: offer.id})));
+    setCurrentPoints(currentCityOffers.map((offer) => ({location: offer.location, id: offer.id})));
   }, [currentCityOffers]);
 
   return (
     <div className="page page--gray page--main">
-      <Header authStatus={props.authStatus}/>
+      <Header authStatus={authorizationStatus}/>
 
       <main className={cn('page__main page__main--index', {'page__main--index-empty': !!props.offers.length})}>
         <h1 className="visually-hidden">Cities</h1>
