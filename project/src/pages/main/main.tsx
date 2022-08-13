@@ -6,9 +6,10 @@ import Map from '../../components/map/map';
 import OfferList from '../../components/offer-list/offer-list';
 import Sorting from '../../components/sorting/sorting';
 import Tabs from '../../components/tabs/tabs';
+
 import { AuthorizationStatus, CITIES, sortPriceAsc, sortPriceDesc, sortRatingDesc } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { updateOffers } from '../../store/action';
+import { setOffers } from '../../store/action';
 
 import { City } from '../../types/city';
 import { Offer } from '../../types/offer';
@@ -29,7 +30,7 @@ function Main(props: mainProps): JSX.Element {
 
   const onChangeTab = (city: City) => {
     setCurrentCity(city);
-    dispatch(updateOffers( {offers: props.offers} ));
+    dispatch(setOffers( {offers: props.offers} ));
     setCurrentCityOffers(props.offers.filter((offer) => offer.city.name === city.name));
   };
 

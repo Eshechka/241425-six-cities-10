@@ -29,7 +29,7 @@ function OfferItem(props: offerItemProps): JSX.Element {
       <div className={['place-card__image-wrapper', props.imgWrapperClassName].join(' ')}>
         <Link to={`offer/${props.offer.id}`}>
           <img className="place-card__image"
-            src={props.offer.src}
+            src={props.offer.previewImage}
             width={props.imgWidth || 260}
             height={props.imgHeight || 200}
             alt="Place image"

@@ -5,6 +5,9 @@ import App from './components/app/app';
 import { AuthorizationStatus } from './const';
 import { reviews } from './mocks/reviews';
 import { store } from './store';
+import {fetchHotelsAction} from './store/api-actions';
+
+store.dispatch(fetchHotelsAction());
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
