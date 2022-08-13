@@ -1,10 +1,18 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { offers as mockOffers } from '../mocks/offers';
-import { changeCity, updateOffers } from './action';
+import { City } from '../types/city';
+import { Offer } from '../types/offer';
+// import { offers as mockOffers } from '../mocks/offers';
+import { changeCity, setDataLoadedStatus, setOffers } from './action';
 
 const INIT_CITY_NAME = 'Paris';
 
-const initialState = {
+type InitalState = {
+  city: City,
+  offers: Offer[],
+  isDataLoaded: boolean,
+}
+
+const initialState: InitalState = {
   city: {
     name: INIT_CITY_NAME,
     location: {
@@ -13,7 +21,8 @@ const initialState = {
       zoom: 13
     },
   },
-  offers: mockOffers,
+  offers: [],
+  isDataLoaded: false,
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -23,10 +32,15 @@ const reducer = createReducer(initialState, (builder) => {
 
       state.city = city;
     })
-    .addCase(updateOffers, (state, action) => {
+    .addCase(setOffers, (state, action) => {
       const { offers } = action.payload;
 
       state.offers = offers;
+    })
+    .addCase(setDataLoadedStatus, (state, action) => {
+      const isDataLoaded = action.payload;
+
+      state.isDataLoaded = isDataLoaded;
     });
 });
 

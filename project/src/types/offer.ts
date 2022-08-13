@@ -1,10 +1,10 @@
 import { City } from './city';
 import { Host } from './host';
-import { Coords } from './location';
+import { Location } from './location';
 
 export type Offer = {
   id: string;
-  src: string;
+  previewImage: string;
   price: number;
   isFavorite: boolean;
   rating: number;
@@ -18,6 +18,6 @@ export type Offer = {
   maxAdults?: number,
   goods?: string[],
   host?: Host,
-  location: Coords;
+  location: Location;
 };
 

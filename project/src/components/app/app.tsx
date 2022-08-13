@@ -9,6 +9,7 @@ import Login from '../../pages/login/login';
 import Main from '../../pages/main/main';
 import Room from '../../pages/room/room';
 import NotFound from '../../pages/not-found/not-found';
+import Spinner from '../spinner/spinner';
 
 import { Review } from '../../types/review';
 import { useAppSelector } from '../../hooks';
@@ -19,9 +20,15 @@ type Settings = {
 }
 
 function App(props: Settings): JSX.Element {
-  const offers = useAppSelector((state) => state.offers);
+  const {offers, isDataLoaded} = useAppSelector((state) => state);
 
-  const favoriteOffers = offers.filter((favoriteOffer) => favoriteOffer.isFavorite === true);
+  const favoriteOffers = offers?.filter((favoriteOffer) => favoriteOffer.isFavorite === true);
+
+  if (!isDataLoaded) {
+    return (
+      <Spinner/>
+    );
+  }
 
   return (
     <BrowserRouter>

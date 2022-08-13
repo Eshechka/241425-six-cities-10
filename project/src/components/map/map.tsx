@@ -8,13 +8,13 @@ import { URL_MARKER_DEFAULT, URL_MARKER_CURRENT } from '../../const';
 
 
 import { City } from '../../types/city';
-import { Coords } from '../../types/location';
+import { Location } from '../../types/location';
 
 
 type mapProps = {
   city: City,
   points: {
-    location: Coords,
+    location: Location,
     id: string,
   }[],
   activePointId?: string | null,
@@ -37,6 +37,7 @@ function Map(props: mapProps): JSX.Element {
   });
 
   useEffect(() => {
+
     if (map) {
       props.points
         .forEach((point) => {
@@ -49,6 +50,7 @@ function Map(props: mapProps): JSX.Element {
             })
             .addTo(map);
         });
+      map.setView([props.city.location.latitude, props.city.location.longitude]);
     }
   }, [map, props.points, props.activePointId]);
 

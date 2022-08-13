@@ -34,48 +34,48 @@ export const CITIES = [
   {
     name: 'Paris',
     location: {
-      latitude: 52.3809553943508,
-      longitude: 4.939309666406198,
+      latitude: 48.85661,
+      longitude: 2.351499,
       zoom: 20
     }
   },
   {
     name: 'Cologne',
     location: {
-      latitude: 52.3809553943508,
-      longitude: 4.939309666406198,
+      latitude: 50.938361,
+      longitude: 6.959974,
       zoom: 20
     }
   },
   {
     name: 'Brussels',
     location: {
-      latitude: 52.3809553943508,
-      longitude: 4.939309666406198,
+      latitude: 50.846557,
+      longitude: 4.351697,
       zoom: 20
     }
   },
   {
     name: 'Amsterdam',
     location: {
-      latitude: 52.3809553943508,
-      longitude: 4.939309666406198,
+      latitude: 52.37454,
+      longitude: 4.897976,
       zoom: 20
     }
   },
   {
     name: 'Hamburg',
     location: {
-      latitude: 52.3809553943508,
-      longitude: 4.939309666406198,
+      latitude: 53.550341,
+      longitude: 10.000654,
       zoom: 20
     }
   },
   {
     name: 'Dusseldorf',
     location: {
-      latitude: 52.3809553943508,
-      longitude: 4.939309666406198,
+      latitude: 51.225402,
+      longitude: 6.776314,
       zoom: 20
     }
   },
@@ -84,3 +84,8 @@ export const CITIES = [
 export const sortPriceDesc = (offerA: Offer, offerB: Offer) => offerB.price - offerA.price;
 export const sortPriceAsc = (offerA: Offer, offerB: Offer) => offerA.price - offerB.price;
 export const sortRatingDesc = (offerA: Offer, offerB: Offer) => offerB.rating - offerA.rating;
+
+export enum APIRoute {
+  Hotels = '/hotels',
+  Favorite = '/favorite',
+}
