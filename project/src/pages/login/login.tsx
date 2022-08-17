@@ -2,13 +2,12 @@ import { FormEvent, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../../components/header/header';
 import { AppRoute, headerView } from '../../const';
-import { useAppDispatch, useAppSelector } from '../../hooks';
+import { useAppDispatch } from '../../hooks';
 import { loginAction } from '../../store/api-actions';
 import { AuthData } from '../../types/auth';
 
 
 function Login(): JSX.Element {
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const dispatch = useAppDispatch();
 
   const loginRef = useRef<HTMLInputElement | null>(null);
@@ -32,7 +31,7 @@ function Login(): JSX.Element {
 
   return (
     <div className="page page--gray page--login">
-      <Header authStatus={authorizationStatus} view={headerView.WOAuth}/>
+      <Header view={headerView.WOAuth}/>
       <main className="page__main page__main--login">
         <div className="page__login-container container">
           <section className="login">

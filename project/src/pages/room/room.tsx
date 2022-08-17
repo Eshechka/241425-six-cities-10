@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Header from '../../components/header/header';
@@ -5,8 +6,10 @@ import Map from '../../components/map/map';
 import OfferItemNear from '../../components/offer-item-near/offer-item-near';
 import ReviewForm from '../../components/review-form/review-form';
 import ReviewList from '../../components/review-list/review-list';
+import Spinner from '../../components/spinner/spinner';
 
-import { useAppSelector } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { fetchRoomAction } from '../../store/api-actions';
 
 import { Offer } from '../../types/offer';
 import { Review } from '../../types/review';
@@ -17,16 +20,27 @@ type roomProps = {
 }
 
 function Room(props: roomProps): JSX.Element {
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const { id } = useParams();
 
-  const room = props.offers.filter((offer) => offer.id === id)[0];
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchRoomAction(id));
+  }, []);
+
+  const {authorizationStatus, room} = useAppSelector((state) => state);
+
+  // const room = props.offers.filter((offer) => offer.id === id)[0];
   const nearRooms = props.offers.slice(0, 3);
   const roomReviews = props.reviews.filter((review: Review) => review.offerId === id).slice(0, 10);
 
+  if (!room) {
+    return <Spinner />;
+  }
+
   return (
     <div className="page">
-      <Header authStatus={authorizationStatus}/>
+      <Header />
 
       <main className="page__main page__main--property">
         <section className="property">
@@ -109,7 +123,7 @@ function Room(props: roomProps): JSX.Element {
             </div>
           </div>
           <section className="property__map map">
-            <Map city={room?.city} points={[{id: room.id, location: room.location}, ...nearRooms.map((nearRoom) => ({location: nearRoom.location, id: nearRoom.id}) )]}/>
+            <Map city={room?.city} points={[{id: room?.id, location: room?.location}, ...nearRooms.map((nearRoom) => ({location: nearRoom.location, id: nearRoom.id}) )]}/>
           </section>
         </section>
         <div className="container">

@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom';
 import { AppRoute, headerView } from '../../const';
+import { useAppSelector } from '../../hooks';
 
 type headerProps = {
-  authStatus: boolean,
   view?: headerView,
 };
 
 function Header(props: headerProps): JSX.Element {
+  const {authorizationStatus} = useAppSelector((state) => state);
+
   return (
     <header className="header">
       <div className="container">
@@ -18,7 +20,7 @@ function Header(props: headerProps): JSX.Element {
           </div>
           <nav className="header__nav">
             <ul className="header__nav-list">
-              {props.authStatus ?
+              {authorizationStatus ?
                 (
                   <>
                     <li className="header__nav-item user">

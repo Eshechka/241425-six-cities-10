@@ -2,19 +2,19 @@ import { AxiosInstance } from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AppDispatch, State } from '../types/state.js';
 import { APIRoute, TIMEOUT_SHOW_ERROR } from '../const';
-import { setAuthorizationStatus, setDataLoadedStatus, setError, setFavoriteOffers, setOffers } from './action';
+import { setAuthorizationStatus, setDataLoadedStatus, setError, setFavoriteOffers, setOffers, setRoom } from './action';
 import { Offer } from '../types/offer';
 import { AuthData } from '../types/auth';
 import { UserData } from '../types/user';
-import { saveToken } from '../services/token';
+import { dropToken, saveToken } from '../services/token';
 import { store } from './index';
 
-export const setOffersAction = createAsyncThunk<void, undefined, {
+export const fetchOffersAction = createAsyncThunk<void, undefined, {
   dispatch: AppDispatch,
   state: State,
   extra: AxiosInstance
 }>(
-  'offers/set',
+  'offers/fetch',
   async (_arg, { dispatch, extra: api }) => {
     const { data } = await api.get<Offer[]>(APIRoute.Hotels);
 
@@ -23,16 +23,25 @@ export const setOffersAction = createAsyncThunk<void, undefined, {
   },
 );
 
-export const setFavoriteOffersAction = createAsyncThunk<void, undefined, {
+export const fetchFavoriteOffersAction = createAsyncThunk<void, undefined, {
   dispatch: AppDispatch,
   state: State,
   extra: AxiosInstance
 }>(
-  'offers/setFavorite',
+  'offers/fetchFavorite',
   async (_arg, { dispatch, extra: api }) => {
     const { data } = await api.get<Offer[]>(APIRoute.Hotels);
 
     dispatch(setFavoriteOffers({ favoriteOffers: data }));
+  },
+);
+
+export const fetchRoomAction = createAsyncThunk<void, string | undefined, { dispatch: AppDispatch, state: State, extra: AxiosInstance }>(
+  'offers/fetchRoom',
+  async (_arg, { dispatch, extra: api }) => {
+    const { data } = await api.get<Offer>(`${APIRoute.Room}${_arg}`);
+
+    dispatch(setRoom({ room: data }));
   },
 );
 
@@ -48,6 +57,7 @@ export const checkLoginAction = createAsyncThunk<void, undefined, {
       dispatch(setAuthorizationStatus(true));
     } catch {
       dispatch(setAuthorizationStatus(false));
+      dispatch(setError(null));
     }
   },
 );
@@ -76,3 +86,15 @@ export const loginAction = createAsyncThunk<void, AuthData, {
   },
 );
 
+export const logoutAction = createAsyncThunk<void, undefined, {
+  dispatch: AppDispatch,
+  state: State,
+  extra: AxiosInstance
+}>(
+  'user/logout',
+  async (_arg, { dispatch, extra: api }) => {
+    await api.delete(APIRoute.Logout);
+    dropToken();
+    dispatch(setAuthorizationStatus(false));
+  },
+);

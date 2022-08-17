@@ -1,4 +1,4 @@
-import {Route, BrowserRouter, Routes, Navigate} from 'react-router-dom';
+import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom';
 
 import { AppRoute } from '../../const';
 
@@ -13,6 +13,12 @@ import Spinner from '../spinner/spinner';
 
 import { Review } from '../../types/review';
 import { useAppSelector } from '../../hooks';
+import { checkLoginAction, fetchFavoriteOffersAction, fetchOffersAction } from '../../store/api-actions';
+import { store } from '../../store';
+
+store.dispatch(checkLoginAction());
+store.dispatch(fetchOffersAction());
+store.dispatch(fetchFavoriteOffersAction());
 
 type Settings = {
   reviews: Review[],

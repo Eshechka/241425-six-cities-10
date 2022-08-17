@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { City } from '../types/city';
 import { Offer } from '../types/offer';
-import { changeCity, setAuthorizationStatus, setDataLoadedStatus, setError, setFavoriteOffers, setOffers } from './action';
+import { changeCity, setAuthorizationStatus, setDataLoadedStatus, setError, setFavoriteOffers, setOffers, setRoom } from './action';
 
 const INIT_CITY_NAME = 'Paris';
 
@@ -12,6 +12,7 @@ type InitalState = {
   isDataLoaded: boolean,
   authorizationStatus: boolean,
   error: string | null,
+  room: Offer | null,
 }
 
 const initialState: InitalState = {
@@ -28,6 +29,7 @@ const initialState: InitalState = {
   isDataLoaded: false,
   authorizationStatus: false,
   error: null,
+  room: null,
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -55,6 +57,13 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(setError, (state, action) => {
       state.error = action.payload;
+    })
+    .addCase(setRoom, (state, action) => {
+      const { room } = action.payload;
+      // eslint-disable-next-line
+      console.log('room: ', room);
+
+      state.room = room;
     });
 });
 

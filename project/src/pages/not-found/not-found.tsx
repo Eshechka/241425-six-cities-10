@@ -1,15 +1,13 @@
 import { Link } from 'react-router-dom';
 
 import Header from '../../components/header/header';
-import { useAppSelector } from '../../hooks';
 
 
 function NotFound(): JSX.Element {
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
 
   return (
     <div className="page page--gray page--notfound">
-      <Header authStatus={authorizationStatus}/>
+      <Header />
 
       <main className="page__main page__main--notfound">
         <div className="page__login-container container">

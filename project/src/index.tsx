@@ -5,11 +5,6 @@ import App from './components/app/app';
 import ErrorMessage from './components/error-message/error-message';
 import { reviews } from './mocks/reviews';
 import { store } from './store';
-import {checkLoginAction, setFavoriteOffersAction, setOffersAction} from './store/api-actions';
-
-store.dispatch(checkLoginAction());
-store.dispatch(setOffersAction());
-store.dispatch(setFavoriteOffersAction());
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,

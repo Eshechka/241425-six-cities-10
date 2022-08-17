@@ -83,7 +83,9 @@ export const sortRatingDesc = (offerA: Offer, offerB: Offer) => offerB.rating - 
 export enum APIRoute {
   Hotels = '/hotels',
   Login = '/login',
+  Logout = '/logout',
   Favorite = '/favorite',
+  Room = '/hotels/',
 }
 
 export enum headerView {

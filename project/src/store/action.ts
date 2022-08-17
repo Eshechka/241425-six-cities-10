@@ -13,3 +13,6 @@ export const setDataLoadedStatus = createAction<boolean>('data/setDataLoadedStat
 export const setAuthorizationStatus = createAction<boolean>('data/setAuthorizationStatus');
 
 export const setError = createAction<string | null>('data/setError');
+
+export const setRoom = createAction<{ room: Offer }>('offers/setRoom');
+

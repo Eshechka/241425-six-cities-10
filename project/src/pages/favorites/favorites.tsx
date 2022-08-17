@@ -2,7 +2,6 @@ import Header from '../../components/header/header';
 
 import OfferItemFavorite from '../../components/offer-item-favorite/offer-item-favorite';
 
-import { useAppSelector } from '../../hooks';
 
 import { Offer } from '../../types/offer';
 
@@ -11,7 +10,6 @@ type favoritesProps = {
 };
 
 function Favorites(props: favoritesProps): JSX.Element {
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
 
   const cities = new Set<string>();
   props.offers.map((offer) => cities.add(offer.city.name));
@@ -19,7 +17,7 @@ function Favorites(props: favoritesProps): JSX.Element {
 
   return (
     <div className="page">
-      <Header authStatus={authorizationStatus}/>
+      <Header />
 
       <main className="page__main page__main--favorites">
         <div className="page__favorites-container container">

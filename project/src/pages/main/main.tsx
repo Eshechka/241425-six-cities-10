@@ -19,7 +19,6 @@ type mainProps = {
 };
 
 function Main(props: mainProps): JSX.Element {
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const dispatch = useAppDispatch();
 
   const [currentCity, setCurrentCity] = useState(useAppSelector((state) => state.city));
@@ -72,7 +71,7 @@ function Main(props: mainProps): JSX.Element {
 
   return (
     <div className="page page--gray page--main">
-      <Header authStatus={authorizationStatus}/>
+      <Header />
 
       <main className={cn('page__main page__main--index', {'page__main--index-empty': !!props.offers.length})}>
         <h1 className="visually-hidden">Cities</h1>
