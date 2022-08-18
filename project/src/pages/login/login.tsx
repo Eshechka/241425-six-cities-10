@@ -1,10 +1,15 @@
 import { FormEvent, useRef } from 'react';
+
 import { Link } from 'react-router-dom';
-import Header from '../../components/header/header';
+
 import { AppRoute, headerView } from '../../const';
-import { useAppDispatch } from '../../hooks';
-import { loginAction } from '../../store/api-actions';
 import { AuthData } from '../../types/auth';
+
+import { useAppDispatch } from '../../hooks';
+
+import { loginAction } from '../../store/api-actions';
+
+import Header from '../../components/header/header';
 
 
 function Login(): JSX.Element {

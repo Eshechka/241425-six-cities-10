@@ -1,19 +1,34 @@
+import { useEffect } from 'react';
 import Header from '../../components/header/header';
 
 import OfferItemFavorite from '../../components/offer-item-favorite/offer-item-favorite';
+import { CITIES } from '../../const';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { fetchFavoriteOffersAction } from '../../store/api-actions';
 
 
 import { Offer } from '../../types/offer';
 
-type favoritesProps = {
-  offers: Offer[],
-};
 
-function Favorites(props: favoritesProps): JSX.Element {
+function Favorites(): JSX.Element {
+  const dispatch = useAppDispatch();
+
+  const {favoriteOffers} = useAppSelector((state) => state);
 
   const cities = new Set<string>();
-  props.offers.map((offer) => cities.add(offer.city.name));
+
+  for (const offerItem of favoriteOffers) {
+    if (cities.size === CITIES.length) {
+      break;
+    }
+    cities.add(offerItem.city.name);
+  }
+
   const favoriteCities: string[] = Array.from(cities.values());
+
+  useEffect(() => {
+    dispatch(fetchFavoriteOffersAction());
+  }, []);
 
   return (
     <div className="page">
@@ -35,7 +50,7 @@ function Favorites(props: favoritesProps): JSX.Element {
                     </div>
                   </div>
                   <div className="favorites__places">
-                    {props.offers
+                    {favoriteOffers
                       .filter((favoriteOffer : Offer) => favoriteOffer.city.name === city)
                       .map((favoriteOffer : Offer) => (
                         <OfferItemFavorite

@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AppDispatch, State } from '../types/state.js';
 import { APIRoute, TIMEOUT_SHOW_ERROR } from '../const';
-import { setAuthorizationStatus, setDataLoadedStatus, setError, setFavoriteOffers, setOffers, setRoom } from './action';
+import { setAuthorizationCheckedStatus, setAuthorizationStatus, setDataLoadedStatus, setError, setFavoriteOffers, setOffers, setRoom, setRoomsNearby } from './action';
 import { Offer } from '../types/offer';
 import { AuthData } from '../types/auth';
 import { UserData } from '../types/user';
@@ -18,8 +18,8 @@ export const fetchOffersAction = createAsyncThunk<void, undefined, {
   async (_arg, { dispatch, extra: api }) => {
     const { data } = await api.get<Offer[]>(APIRoute.Hotels);
 
-    dispatch(setDataLoadedStatus(true));
     dispatch(setOffers({ offers: data }));
+    dispatch(setDataLoadedStatus(true));
   },
 );
 
@@ -30,18 +30,31 @@ export const fetchFavoriteOffersAction = createAsyncThunk<void, undefined, {
 }>(
   'offers/fetchFavorite',
   async (_arg, { dispatch, extra: api }) => {
-    const { data } = await api.get<Offer[]>(APIRoute.Hotels);
+    const { data } = await api.get<Offer[]>(APIRoute.Favorite);
 
     dispatch(setFavoriteOffers({ favoriteOffers: data }));
   },
 );
 
-export const fetchRoomAction = createAsyncThunk<void, string | undefined, { dispatch: AppDispatch, state: State, extra: AxiosInstance }>(
+export const fetchRoomAction = createAsyncThunk<void, string | undefined, {
+  dispatch: AppDispatch, state: State, extra: AxiosInstance
+}>(
   'offers/fetchRoom',
   async (_arg, { dispatch, extra: api }) => {
     const { data } = await api.get<Offer>(`${APIRoute.Room}${_arg}`);
 
     dispatch(setRoom({ room: data }));
+  },
+);
+
+export const fetchRoomsNearbyAction = createAsyncThunk<void, string | undefined, {
+  dispatch: AppDispatch, state: State, extra: AxiosInstance
+}>(
+  'offers/fetchRoomsNearby',
+  async (_arg, { dispatch, extra: api }) => {
+    const { data } = await api.get<Offer[]>(`${APIRoute.Room}${_arg}/nearby`);
+
+    dispatch(setRoomsNearby({ rooms: data }));
   },
 );
 
@@ -55,8 +68,10 @@ export const checkLoginAction = createAsyncThunk<void, undefined, {
     try {
       await api.get(APIRoute.Login);
       dispatch(setAuthorizationStatus(true));
+      dispatch(setAuthorizationCheckedStatus(true));
     } catch {
       dispatch(setAuthorizationStatus(false));
+      dispatch(setAuthorizationCheckedStatus(true));
       dispatch(setError(null));
     }
   },

@@ -1,12 +1,15 @@
 import { Link } from 'react-router-dom';
 import { AppRoute, headerView } from '../../const';
-import { useAppSelector } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { logoutAction } from '../../store/api-actions';
 
 type headerProps = {
   view?: headerView,
 };
 
 function Header(props: headerProps): JSX.Element {
+  const dispatch = useAppDispatch();
+
   const {authorizationStatus} = useAppSelector((state) => state);
 
   return (
@@ -32,9 +35,15 @@ function Header(props: headerProps): JSX.Element {
                       </Link>
                     </li>
                     <li className="header__nav-item">
-                      <a className="header__nav-link" href="#">
+                      <Link className="header__nav-link"
+                        to={AppRoute.Root}
+                        onClick={(evt) => {
+                          evt.preventDefault();
+                          dispatch(logoutAction());
+                        }}
+                      >
                         <span className="header__signout">Sign out</span>
-                      </a>
+                      </Link>
                     </li>
                   </>
                 )

@@ -9,25 +9,24 @@ import Login from '../../pages/login/login';
 import Main from '../../pages/main/main';
 import Room from '../../pages/room/room';
 import NotFound from '../../pages/not-found/not-found';
-import Spinner from '../spinner/spinner';
 
 import { Review } from '../../types/review';
-import { useAppSelector } from '../../hooks';
-import { checkLoginAction, fetchFavoriteOffersAction, fetchOffersAction } from '../../store/api-actions';
+import { checkLoginAction } from '../../store/api-actions';
 import { store } from '../../store';
+import { useAppSelector } from '../../hooks';
+import Spinner from '../spinner/spinner';
 
 store.dispatch(checkLoginAction());
-store.dispatch(fetchOffersAction());
-store.dispatch(fetchFavoriteOffersAction());
 
 type Settings = {
   reviews: Review[],
 }
 
-function App(props: Settings): JSX.Element {
-  const {offers, favoriteOffers, isDataLoaded, authorizationStatus} = useAppSelector((state) => state);
 
-  if (!isDataLoaded) {
+function App(props: Settings): JSX.Element {
+  const {authorizationStatus, isAuthorizationChecked} = useAppSelector((state) => state);
+
+  if (isAuthorizationChecked === false) {
     return (
       <Spinner/>
     );
@@ -38,7 +37,7 @@ function App(props: Settings): JSX.Element {
       <Routes>
         <Route
           path={AppRoute.Root}
-          element={<Main offers={offers} />}
+          element={<Main />}
         />
         <Route
           path={AppRoute.Login}
@@ -48,13 +47,13 @@ function App(props: Settings): JSX.Element {
           path={AppRoute.Favorites}
           element={
             <PrivateRoute>
-              <Favorites offers={favoriteOffers} />
+              <Favorites />
             </PrivateRoute>
           }
         />
         <Route path={AppRoute.Room}>
           <Route index element={<Navigate to={AppRoute.Root} />} />
-          <Route path=':id' element={<Room offers={offers} reviews={props.reviews} />} />
+          <Route path=':id' element={<Room reviews={props.reviews} />} />
         </Route>
         <Route
           path="*"

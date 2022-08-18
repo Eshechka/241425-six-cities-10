@@ -5,32 +5,43 @@ import Header from '../../components/header/header';
 import Map from '../../components/map/map';
 import OfferList from '../../components/offer-list/offer-list';
 import Sorting from '../../components/sorting/sorting';
+import Spinner from '../../components/spinner/spinner';
 import Tabs from '../../components/tabs/tabs';
 
 import { CITIES, sortPriceAsc, sortPriceDesc, sortRatingDesc } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { setOffers } from '../../store/action';
+import { fetchOffersAction } from '../../store/api-actions';
 
 import { City } from '../../types/city';
-import { Offer } from '../../types/offer';
 
-type mainProps = {
-  offers: Offer[],
-};
 
-function Main(props: mainProps): JSX.Element {
+function Main(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const [currentCity, setCurrentCity] = useState(useAppSelector((state) => state.city));
-  const initialCurrentCityOffers = useAppSelector((state) => state.offers).filter((offer) => offer.city.name === currentCity.name);
+  const {isDataLoaded, offers, city} = useAppSelector((state) => state);
+
+  const [currentCity, setCurrentCity] = useState(city);
+  let initialCurrentCityOffers = offers.filter((offer) => offer.city.name === currentCity.name);
   const [currentCityOffers, setCurrentCityOffers] = useState(initialCurrentCityOffers);
   const [currentPoints, setCurrentPoints] = useState(currentCityOffers.map((offer) => ({location: offer.location, id: offer.id}) ));
   const [hoveredOffer, setHoveredOffer] = useState('');
 
-  const onChangeTab = (city: City) => {
-    setCurrentCity(city);
-    dispatch(setOffers( {offers: props.offers} ));
-    setCurrentCityOffers(props.offers.filter((offer) => offer.city.name === city.name));
+  useEffect(() => {
+    dispatch(fetchOffersAction());
+  }, []);
+
+  useEffect(() => {
+    initialCurrentCityOffers = offers.filter((offer) => offer.city.name === currentCity.name);
+    setCurrentCityOffers(initialCurrentCityOffers);
+  }, [offers]);
+
+  useEffect(() => {
+    setCurrentPoints(currentCityOffers.map((offer) => ({location: offer.location, id: offer.id})));
+  }, [currentCityOffers]);
+
+  const onChangeTab = (newCity: City) => {
+    setCurrentCity(newCity);
+    setCurrentCityOffers(offers.filter((offer) => offer.city.name === newCity.name));
   };
 
   const onSort = (filterType: string) => {
@@ -65,15 +76,17 @@ function Main(props: mainProps): JSX.Element {
   };
 
 
-  useEffect(() => {
-    setCurrentPoints(currentCityOffers.map((offer) => ({location: offer.location, id: offer.id})));
-  }, [currentCityOffers]);
+  if (!isDataLoaded) {
+    return (
+      <Spinner/>
+    );
+  }
 
   return (
     <div className="page page--gray page--main">
       <Header />
 
-      <main className={cn('page__main page__main--index', {'page__main--index-empty': !!props.offers.length})}>
+      <main className={cn('page__main page__main--index', {'page__main--index-empty': !!offers.length})}>
         <h1 className="visually-hidden">Cities</h1>
 
         <Tabs cities={CITIES} onChangeTab={onChangeTab}/>

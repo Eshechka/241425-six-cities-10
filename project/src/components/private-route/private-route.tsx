@@ -7,7 +7,7 @@ type privateRouteProps = {
 };
 
 function PrivateRoute(props: privateRouteProps): JSX.Element {
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const {authorizationStatus} = useAppSelector((state) => state);
 
   return (
     authorizationStatus ? props.children : <Navigate to={AppRoute.Login} />
