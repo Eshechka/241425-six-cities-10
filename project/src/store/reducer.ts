@@ -1,15 +1,20 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { City } from '../types/city';
 import { Offer } from '../types/offer';
-// import { offers as mockOffers } from '../mocks/offers';
-import { changeCity, setDataLoadedStatus, setOffers } from './action';
+import { changeCity, setAuthorizationCheckedStatus, setAuthorizationStatus, setDataLoadedStatus, setError, setFavoriteOffers, setOffers, setRoom, setRoomsNearby } from './action';
 
 const INIT_CITY_NAME = 'Paris';
 
 type InitalState = {
   city: City,
   offers: Offer[],
+  favoriteOffers: Offer[],
+  isAuthorizationChecked: boolean,
   isDataLoaded: boolean,
+  authorizationStatus: boolean,
+  error: string | null,
+  room: Offer | null,
+  roomsNearby: Offer[] | [],
 }
 
 const initialState: InitalState = {
@@ -22,7 +27,13 @@ const initialState: InitalState = {
     },
   },
   offers: [],
+  favoriteOffers: [],
+  isAuthorizationChecked: false,
   isDataLoaded: false,
+  authorizationStatus: false,
+  error: null,
+  room: null,
+  roomsNearby: []
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -37,10 +48,32 @@ const reducer = createReducer(initialState, (builder) => {
 
       state.offers = offers;
     })
-    .addCase(setDataLoadedStatus, (state, action) => {
-      const isDataLoaded = action.payload;
+    .addCase(setFavoriteOffers, (state, action) => {
+      const { favoriteOffers } = action.payload;
 
-      state.isDataLoaded = isDataLoaded;
+      state.favoriteOffers = favoriteOffers;
+    })
+    .addCase(setAuthorizationCheckedStatus, (state, action) => {
+      state.isAuthorizationChecked = action.payload;
+    })
+    .addCase(setDataLoadedStatus, (state, action) => {
+      state.isDataLoaded = action.payload;
+    })
+    .addCase(setAuthorizationStatus, (state, action) => {
+      state.authorizationStatus = action.payload;
+    })
+    .addCase(setError, (state, action) => {
+      state.error = action.payload;
+    })
+    .addCase(setRoom, (state, action) => {
+      const { room } = action.payload;
+
+      state.room = room;
+    })
+    .addCase(setRoomsNearby, (state, action) => {
+      const { rooms } = action.payload;
+
+      state.roomsNearby = rooms;
     });
 });
 

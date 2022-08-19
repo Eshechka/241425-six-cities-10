@@ -1,32 +1,45 @@
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+
+import { useAppDispatch, useAppSelector } from '../../hooks';
+
+import { fetchRoomAction, fetchRoomsNearbyAction } from '../../store/api-actions';
+
+import { Review } from '../../types/review';
 
 import Header from '../../components/header/header';
 import Map from '../../components/map/map';
 import OfferItemNear from '../../components/offer-item-near/offer-item-near';
 import ReviewForm from '../../components/review-form/review-form';
 import ReviewList from '../../components/review-list/review-list';
+import Spinner from '../../components/spinner/spinner';
 
-import { AuthorizationStatus } from '../../const';
-
-import { Offer } from '../../types/offer';
-import { Review } from '../../types/review';
 
 type roomProps = {
-  offers: Offer[],
   reviews: Review[],
-  authStatus: AuthorizationStatus,
 }
 
 function Room(props: roomProps): JSX.Element {
   const { id } = useParams();
 
-  const room = props.offers.filter((offer) => offer.id === id)[0];
-  const nearRooms = props.offers.slice(0, 3);
+  const dispatch = useAppDispatch();
+
+  const {authorizationStatus, room, roomsNearby} = useAppSelector((state) => state);
+
   const roomReviews = props.reviews.filter((review: Review) => review.offerId === id).slice(0, 10);
+
+  useEffect(() => {
+    dispatch(fetchRoomAction(id));
+    dispatch(fetchRoomsNearbyAction(id));
+  }, []);
+
+  if (!room) {
+    return <Spinner />;
+  }
 
   return (
     <div className="page">
-      <Header authStatus={props.authStatus}/>
+      <Header />
 
       <main className="page__main page__main--property">
         <section className="property">
@@ -104,19 +117,19 @@ function Room(props: roomProps): JSX.Element {
               </div>
               <section className="property__reviews reviews">
                 <ReviewList reviews={roomReviews}/>
-                {props.authStatus === AuthorizationStatus.Auth ? <ReviewForm/> : null}
+                {authorizationStatus && <ReviewForm/>}
               </section>
             </div>
           </div>
           <section className="property__map map">
-            <Map city={room?.city} points={[{id: room.id, location: room.location}, ...nearRooms.map((nearRoom) => ({location: nearRoom.location, id: nearRoom.id}) )]}/>
+            <Map city={room?.city} points={[{id: room?.id, location: room?.location}, ...roomsNearby.map((nearRoom) => ({location: nearRoom.location, id: nearRoom.id}) )]}/>
           </section>
         </section>
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <div className="near-places__list places__list">
-              {nearRooms.map((offer) =>
+              {roomsNearby.map((offer) =>
                 (
                   <OfferItemNear
                     key={offer.id}

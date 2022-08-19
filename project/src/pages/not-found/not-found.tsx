@@ -2,16 +2,12 @@ import { Link } from 'react-router-dom';
 
 import Header from '../../components/header/header';
 
-import { AuthorizationStatus } from '../../const';
 
-type notfoundProps = {
-  authStatus: AuthorizationStatus,
-}
+function NotFound(): JSX.Element {
 
-function NotFound(props: notfoundProps): JSX.Element {
   return (
     <div className="page page--gray page--notfound">
-      <Header authStatus={props.authStatus}/>
+      <Header />
 
       <main className="page__main page__main--notfound">
         <div className="page__login-container container">

@@ -7,11 +7,6 @@ export enum AppRoute {
   Room = '/offer',
 }
 
-export enum AuthorizationStatus {
-  NoAuth = 'NOAUTH',
-  Auth = 'AUTH',
-}
-
 export const FilterType = [
   'Popular',
   'Price: low to high',
@@ -87,5 +82,15 @@ export const sortRatingDesc = (offerA: Offer, offerB: Offer) => offerB.rating - 
 
 export enum APIRoute {
   Hotels = '/hotels',
+  Login = '/login',
+  Logout = '/logout',
   Favorite = '/favorite',
+  Room = '/hotels/',
 }
+
+export enum headerView {
+  WAuth = 'with-auth',
+  WOAuth = 'without-auth',
+}
+
+export const TIMEOUT_SHOW_ERROR = 2000;

@@ -1,6 +1,6 @@
-import {Route, BrowserRouter, Routes, Navigate} from 'react-router-dom';
+import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom';
 
-import { AppRoute, AuthorizationStatus } from '../../const';
+import { AppRoute } from '../../const';
 
 import PrivateRoute from '../private-route/private-route';
 
@@ -9,22 +9,24 @@ import Login from '../../pages/login/login';
 import Main from '../../pages/main/main';
 import Room from '../../pages/room/room';
 import NotFound from '../../pages/not-found/not-found';
-import Spinner from '../spinner/spinner';
 
 import { Review } from '../../types/review';
+import { checkLoginAction } from '../../store/api-actions';
+import { store } from '../../store';
 import { useAppSelector } from '../../hooks';
+import Spinner from '../spinner/spinner';
+
+store.dispatch(checkLoginAction());
 
 type Settings = {
   reviews: Review[],
-  authStatus: AuthorizationStatus,
 }
 
+
 function App(props: Settings): JSX.Element {
-  const {offers, isDataLoaded} = useAppSelector((state) => state);
+  const {authorizationStatus, isAuthorizationChecked} = useAppSelector((state) => state);
 
-  const favoriteOffers = offers?.filter((favoriteOffer) => favoriteOffer.isFavorite === true);
-
-  if (!isDataLoaded) {
+  if (isAuthorizationChecked === false) {
     return (
       <Spinner/>
     );
@@ -35,27 +37,27 @@ function App(props: Settings): JSX.Element {
       <Routes>
         <Route
           path={AppRoute.Root}
-          element={<Main offers={offers} authStatus={props.authStatus} />}
+          element={<Main />}
         />
         <Route
           path={AppRoute.Login}
-          element={props.authStatus === AuthorizationStatus.NoAuth ? <Login authStatus={props.authStatus} /> : <Navigate to={AppRoute.Root} />}
+          element={!authorizationStatus ? <Login /> : <Navigate to={AppRoute.Root} />}
         />
         <Route
           path={AppRoute.Favorites}
           element={
-            <PrivateRoute authorizationStatus={props.authStatus} >
-              <Favorites offers={favoriteOffers} authStatus={props.authStatus} />
+            <PrivateRoute>
+              <Favorites />
             </PrivateRoute>
           }
         />
         <Route path={AppRoute.Room}>
           <Route index element={<Navigate to={AppRoute.Root} />} />
-          <Route path=':id' element={<Room offers={offers} reviews={props.reviews} authStatus={props.authStatus}/>} />
+          <Route path=':id' element={<Room reviews={props.reviews} />} />
         </Route>
         <Route
           path="*"
-          element={<NotFound authStatus={props.authStatus} />}
+          element={<NotFound />}
         />
       </Routes>
     </BrowserRouter>

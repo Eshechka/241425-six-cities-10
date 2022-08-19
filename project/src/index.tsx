@@ -2,12 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import App from './components/app/app';
-import { AuthorizationStatus } from './const';
+import ErrorMessage from './components/error-message/error-message';
 import { reviews } from './mocks/reviews';
 import { store } from './store';
-import {fetchHotelsAction} from './store/api-actions';
-
-store.dispatch(fetchHotelsAction());
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
@@ -15,16 +12,15 @@ const root = ReactDOM.createRoot(
 
 const Settings = {
   reviews: reviews,
-  authStatus: AuthorizationStatus.Auth,
 };
 
 
 root.render(
   <React.StrictMode>
     <Provider store = {store}>
+      <ErrorMessage/>
       <App
         reviews={Settings.reviews}
-        authStatus={Settings.authStatus}
       />
     </Provider>
   </React.StrictMode>,
