@@ -21,8 +21,6 @@ export const setRoom = createAction<{ room: Offer }>('room/set');
 
 export const setRoomReviews = createAction<{ reviews: Review[] }>('room/setReviews');
 
-export const addRoomReview = createAction<{ reviews: Review[] }>('room/addReview');
-
 export const setRoomsNearby = createAction<{ rooms: Offer[] }>('room/setRoomsNearby');
 
 

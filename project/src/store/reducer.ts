@@ -2,7 +2,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import { City } from '../types/city';
 import { Offer } from '../types/offer';
 import { Review } from '../types/review';
-import { addRoomReview, changeCity, setAuthorizationCheckedStatus, setAuthorizationStatus, setDataLoadedStatus, setError, setFavoriteOffers, setOffers, setRoom, setRoomReviews, setRoomsNearby } from './action';
+import { changeCity, setAuthorizationCheckedStatus, setAuthorizationStatus, setDataLoadedStatus, setError, setFavoriteOffers, setOffers, setRoom, setRoomReviews, setRoomsNearby } from './action';
 
 const INIT_CITY_NAME = 'Paris';
 
@@ -74,11 +74,6 @@ const reducer = createReducer(initialState, (builder) => {
       state.room = room;
     })
     .addCase(setRoomReviews, (state, action) => {
-      const { reviews } = action.payload;
-
-      state.roomReviews = reviews;
-    })
-    .addCase(addRoomReview, (state, action) => {
       const { reviews } = action.payload;
 
       state.roomReviews = reviews;
