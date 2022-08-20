@@ -1,7 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { City } from '../types/city';
 import { Offer } from '../types/offer';
-import { changeCity, setAuthorizationCheckedStatus, setAuthorizationStatus, setDataLoadedStatus, setError, setFavoriteOffers, setOffers, setRoom, setRoomsNearby } from './action';
+import { Review } from '../types/review';
+import { addRoomReview, changeCity, setAuthorizationCheckedStatus, setAuthorizationStatus, setDataLoadedStatus, setError, setFavoriteOffers, setOffers, setRoom, setRoomReviews, setRoomsNearby } from './action';
 
 const INIT_CITY_NAME = 'Paris';
 
@@ -14,6 +15,7 @@ type InitalState = {
   authorizationStatus: boolean,
   error: string | null,
   room: Offer | null,
+  roomReviews: Review[] | [],
   roomsNearby: Offer[] | [],
 }
 
@@ -33,6 +35,7 @@ const initialState: InitalState = {
   authorizationStatus: false,
   error: null,
   room: null,
+  roomReviews: [],
   roomsNearby: []
 };
 
@@ -69,6 +72,16 @@ const reducer = createReducer(initialState, (builder) => {
       const { room } = action.payload;
 
       state.room = room;
+    })
+    .addCase(setRoomReviews, (state, action) => {
+      const { reviews } = action.payload;
+
+      state.roomReviews = reviews;
+    })
+    .addCase(addRoomReview, (state, action) => {
+      const { reviews } = action.payload;
+
+      state.roomReviews = reviews;
     })
     .addCase(setRoomsNearby, (state, action) => {
       const { rooms } = action.payload;

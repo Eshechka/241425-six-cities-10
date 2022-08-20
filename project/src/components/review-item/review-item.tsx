@@ -11,10 +11,10 @@ function ReviewItem(props: reviewItemProps): JSX.Element {
     <li className="reviews__item">
       <div className="reviews__user user">
         <div className="reviews__avatar-wrapper user__avatar-wrapper">
-          <img className="reviews__avatar user__avatar" src={props.review.avatar} width="54" height="54" alt="Reviews avatar"/>
+          <img className="reviews__avatar user__avatar" src={props.review.user.avatarUrl} width="54" height="54" alt="Reviews avatar"/>
         </div>
         <span className="reviews__user-name">
-          {props.review.name}
+          {props.review.user.name}
         </span>
       </div>
       <div className="reviews__info">
@@ -25,9 +25,9 @@ function ReviewItem(props: reviewItemProps): JSX.Element {
           </div>
         </div>
         <p className="reviews__text">
-          {props.review.text}
+          {props.review.comment}
         </p>
-        <time className="reviews__time" dateTime={props.review.data}>{formatDate(props.review.data)}</time>
+        <time className="reviews__time" dateTime={props.review.date}>{formatDate(props.review.date)}</time>
       </div>
     </li>
   );

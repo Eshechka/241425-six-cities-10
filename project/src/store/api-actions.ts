@@ -2,12 +2,13 @@ import { AxiosInstance } from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AppDispatch, State } from '../types/state.js';
 import { APIRoute, TIMEOUT_SHOW_ERROR } from '../const';
-import { setAuthorizationCheckedStatus, setAuthorizationStatus, setDataLoadedStatus, setError, setFavoriteOffers, setOffers, setRoom, setRoomsNearby } from './action';
+import { addRoomReview, setAuthorizationCheckedStatus, setAuthorizationStatus, setDataLoadedStatus, setError, setFavoriteOffers, setOffers, setRoom, setRoomReviews, setRoomsNearby } from './action';
 import { Offer } from '../types/offer';
 import { AuthData } from '../types/auth';
 import { UserData } from '../types/user';
 import { dropToken, saveToken } from '../services/token';
 import { store } from './index';
+import { AddedReview, Review } from '../types/review.js';
 
 export const fetchOffersAction = createAsyncThunk<void, undefined, {
   dispatch: AppDispatch,
@@ -39,7 +40,7 @@ export const fetchFavoriteOffersAction = createAsyncThunk<void, undefined, {
 export const fetchRoomAction = createAsyncThunk<void, string | undefined, {
   dispatch: AppDispatch, state: State, extra: AxiosInstance
 }>(
-  'offers/fetchRoom',
+  'room/fetch',
   async (_arg, { dispatch, extra: api }) => {
     const { data } = await api.get<Offer>(`${APIRoute.Room}${_arg}`);
 
@@ -50,11 +51,33 @@ export const fetchRoomAction = createAsyncThunk<void, string | undefined, {
 export const fetchRoomsNearbyAction = createAsyncThunk<void, string | undefined, {
   dispatch: AppDispatch, state: State, extra: AxiosInstance
 }>(
-  'offers/fetchRoomsNearby',
+  'room/fetchRoomsNearby',
   async (_arg, { dispatch, extra: api }) => {
     const { data } = await api.get<Offer[]>(`${APIRoute.Room}${_arg}/nearby`);
 
     dispatch(setRoomsNearby({ rooms: data }));
+  },
+);
+
+export const fetchRoomReviewsAction = createAsyncThunk<void, string | undefined, {
+  dispatch: AppDispatch, state: State, extra: AxiosInstance
+}>(
+  'room/fetchReviews',
+  async (_arg, { dispatch, extra: api }) => {
+    const { data } = await api.get<Review[]>(`${APIRoute.Comments}${_arg}`);
+
+    dispatch(setRoomReviews({ reviews: data }));
+  },
+);
+
+export const fetchAddRoomReviewAction = createAsyncThunk<void, { id: string, review: AddedReview }, {
+  dispatch: AppDispatch, state: State, extra: AxiosInstance
+}>(
+  'room/fetchAddReview',
+  async ({ id, review: { comment, rating } }, { dispatch, extra: api }) => {
+    const { data } = await api.post<Review[]>(`${APIRoute.Comments}${id}`, { comment, rating });
+
+    dispatch(addRoomReview({ reviews: data }));
   },
 );
 
@@ -72,7 +95,6 @@ export const checkLoginAction = createAsyncThunk<void, undefined, {
     } catch {
       dispatch(setAuthorizationStatus(false));
       dispatch(setAuthorizationCheckedStatus(true));
-      dispatch(setError(null));
     }
   },
 );
