@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { AppRoute } from '../../const';
 
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
-import { fetchRoomAction, fetchRoomsNearbyAction } from '../../store/api-actions';
-
-import { Review } from '../../types/review';
+import { fetchRoomAction, fetchRoomsNearbyAction, fetchRoomReviewsAction } from '../../store/api-actions';
 
 import Header from '../../components/header/header';
 import Map from '../../components/map/map';
@@ -15,25 +15,36 @@ import ReviewList from '../../components/review-list/review-list';
 import Spinner from '../../components/spinner/spinner';
 
 
-type roomProps = {
-  reviews: Review[],
-}
-
-function Room(props: roomProps): JSX.Element {
+function Room(): JSX.Element {
   const { id } = useParams();
 
   const dispatch = useAppDispatch();
 
-  const {authorizationStatus, room, roomsNearby} = useAppSelector((state) => state);
+  const navigate = useNavigate();
 
-  const roomReviews = props.reviews.filter((review: Review) => review.offerId === id).slice(0, 10);
+  const {authorizationStatus, room, roomsNearby, roomReviews, error} = useAppSelector((state) => state);
+
+  const [reviews, setReviews] = useState(roomReviews);
+
+  useEffect(() => {
+    if (roomReviews && roomReviews.length > 0) {
+      setReviews(roomReviews.slice(0, 10));
+    }
+  }, [roomReviews]);
+
+  useEffect(() => {
+    if (error !== null && error !== 'You are not logged in or you do not have permission to this page.') {
+      navigate(AppRoute.NotFound);
+    }
+  }, [error]);
 
   useEffect(() => {
     dispatch(fetchRoomAction(id));
+    dispatch(fetchRoomReviewsAction(id));
     dispatch(fetchRoomsNearbyAction(id));
   }, []);
 
-  if (!room) {
+  if (!room || !roomReviews) {
     return <Spinner />;
   }
 
@@ -116,13 +127,13 @@ function Room(props: roomProps): JSX.Element {
                 </div>
               </div>
               <section className="property__reviews reviews">
-                <ReviewList reviews={roomReviews}/>
-                {authorizationStatus && <ReviewForm/>}
+                {reviews && <ReviewList reviews={reviews}/>}
+                {authorizationStatus && id && <ReviewForm roomId={id} />}
               </section>
             </div>
           </div>
           <section className="property__map map">
-            <Map city={room?.city} points={[{id: room?.id, location: room?.location}, ...roomsNearby.map((nearRoom) => ({location: nearRoom.location, id: nearRoom.id}) )]}/>
+            {room && <Map city={room?.city} points={[{id: room?.id, location: room?.location}, ...roomsNearby.map((nearRoom) => ({location: nearRoom.location, id: nearRoom.id}) )]}/>}
           </section>
         </section>
         <div className="container">
@@ -130,11 +141,7 @@ function Room(props: roomProps): JSX.Element {
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <div className="near-places__list places__list">
               {roomsNearby.map((offer) =>
-                (
-                  <OfferItemNear
-                    key={offer.id}
-                    offer={offer}
-                  />)
+                (<OfferItemNear key={offer.id} offer={offer} />)
               )}
             </div>
           </section>

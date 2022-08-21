@@ -5,6 +5,7 @@ export enum AppRoute {
   Login = '/login',
   Favorites = '/favorites',
   Room = '/offer',
+  NotFound = '/404',
 }
 
 export const FilterType = [
@@ -86,6 +87,7 @@ export enum APIRoute {
   Logout = '/logout',
   Favorite = '/favorite',
   Room = '/hotels/',
+  Comments = '/comments/'
 }
 
 export enum headerView {
@@ -94,3 +96,9 @@ export enum headerView {
 }
 
 export const TIMEOUT_SHOW_ERROR = 2000;
+
+
+export const reviewValidation = {
+  ratingGt: 0,
+  minCommentLength: 50,
+};

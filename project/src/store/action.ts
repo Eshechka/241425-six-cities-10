@@ -1,6 +1,7 @@
 import { createAction } from '@reduxjs/toolkit';
 import { City } from '../types/city';
 import { Offer } from '../types/offer';
+import { Review } from '../types/review';
 
 export const changeCity = createAction<{ city: City }>('city/change');
 
@@ -16,8 +17,10 @@ export const setAuthorizationStatus = createAction<boolean>('data/setAuthorizati
 
 export const setError = createAction<string | null>('data/setError');
 
-export const setRoom = createAction<{ room: Offer }>('offers/setRoom');
+export const setRoom = createAction<{ room: Offer }>('room/set');
 
-export const setRoomsNearby = createAction<{ rooms: Offer[] }>('offers/setRoomsNearby');
+export const setRoomReviews = createAction<{ reviews: Review[] }>('room/setReviews');
+
+export const setRoomsNearby = createAction<{ rooms: Offer[] }>('room/setRoomsNearby');
 
 
