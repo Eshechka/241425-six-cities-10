@@ -3,8 +3,9 @@ import cn from 'classnames';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks';
+import { changeCity } from '../../store/data-offers/data-offers';
 
-import { changeCity } from '../../store/action';
+import { getCity } from '../../store/data-offers/selectors';
 
 import { City } from '../../types/city';
 
@@ -14,7 +15,7 @@ type tabsProps = {
 };
 
 function Tabs(props: tabsProps): JSX.Element {
-  const [currentCity, setCurrentCity] = useState(useAppSelector((state) => state.city));
+  const [currentCity, setCurrentCity] = useState(useAppSelector(getCity));
 
   const dispatch = useAppDispatch();
 

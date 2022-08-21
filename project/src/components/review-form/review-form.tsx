@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from 'react';
 import { reviewValidation } from '../../const';
 import { useAppDispatch } from '../../hooks';
-import { fetchRoomReviewAction } from '../../store/api-actions';
+import { addRoomReviewAction } from '../../store/api-actions';
 
 type ReviewFormProps = {
   roomId: string,
@@ -41,7 +41,7 @@ function ReviewForm(props: ReviewFormProps): JSX.Element {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(fetchRoomReviewAction({id: props.roomId, review: formData}));
+    dispatch(addRoomReviewAction({id: props.roomId, review: formData}));
     setFormData(initialformData);
   };
 

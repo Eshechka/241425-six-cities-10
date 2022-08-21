@@ -23,7 +23,6 @@ export const formatDate = (data: string): string => {
 };
 
 export const URL_MARKER_DEFAULT = '/img/pin.svg';
-
 export const URL_MARKER_CURRENT = '/img/pin-active.svg';
 
 export const CITIES = [
@@ -95,10 +94,24 @@ export enum headerView {
   WOAuth = 'without-auth',
 }
 
-export const TIMEOUT_SHOW_ERROR = 2000;
-
-
 export const reviewValidation = {
   ratingGt: 0,
   minCommentLength: 50,
 };
+
+export enum ErrorMessages {
+  Code404 = 'Request failed with status code 404',
+}
+
+export enum NameSpace {
+  Data = 'DATA',
+  Room = 'ROOM',
+  Offers = 'OFFERS',
+  User = 'USER',
+}
+
+export enum AuthorizationStatus {
+  Auth = 'AUTH',
+  NoAuth = 'NO_AUTH',
+  Unknown = 'UNKNOWN',
+}

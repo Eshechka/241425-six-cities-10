@@ -5,6 +5,7 @@ import OfferItemFavorite from '../../components/offer-item-favorite/offer-item-f
 import { CITIES } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchFavoriteOffersAction } from '../../store/api-actions';
+import { getFavoriteOffers } from '../../store/data-offers/selectors';
 
 
 import { Offer } from '../../types/offer';
@@ -13,7 +14,7 @@ import { Offer } from '../../types/offer';
 function Favorites(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const {favoriteOffers} = useAppSelector((state) => state);
+  const favoriteOffers = useAppSelector(getFavoriteOffers);
 
   const cities = new Set<string>();
 
@@ -45,6 +46,7 @@ function Favorites(): JSX.Element {
                   <div className="favorites__locations locations locations--current">
                     <div className="locations__item">
                       <a className="locations__item-link" href="#">
+                        {/* ????????? */}
                         <span>{city}</span>
                       </a>
                     </div>

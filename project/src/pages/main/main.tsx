@@ -11,6 +11,8 @@ import Tabs from '../../components/tabs/tabs';
 import { CITIES, sortPriceAsc, sortPriceDesc, sortRatingDesc } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchOffersAction } from '../../store/api-actions';
+import { getCity, getLoadingDataStatus, getOffers } from '../../store/data-offers/selectors';
+
 
 import { City } from '../../types/city';
 
@@ -18,7 +20,9 @@ import { City } from '../../types/city';
 function Main(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const {isDataLoaded, offers, city} = useAppSelector((state) => state);
+  const isDataLoading = useAppSelector(getLoadingDataStatus);
+  const offers = useAppSelector(getOffers);
+  const city = useAppSelector(getCity);
 
   const [currentCity, setCurrentCity] = useState(city);
   let initialCurrentCityOffers = offers.filter((offer) => offer.city.name === currentCity.name);
@@ -76,7 +80,7 @@ function Main(): JSX.Element {
   };
 
 
-  if (!isDataLoaded) {
+  if (isDataLoading === true) {
     return (
       <Spinner/>
     );

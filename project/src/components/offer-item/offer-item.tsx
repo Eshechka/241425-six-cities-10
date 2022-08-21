@@ -1,4 +1,5 @@
 import cn from 'classnames';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../const';
 
@@ -16,6 +17,13 @@ type offerItemProps = {
 };
 
 function OfferItem(props: offerItemProps): JSX.Element {
+
+  const [isActiveBookmark, setIsActiveBookmark] = useState(props.offer.isFavorite);
+
+  const toggleBookmark = () => {
+    setIsActiveBookmark((prev) => !prev);
+  };
+
   return (
     <article
       className={['place-card', props.articleClassName].join(' ')}
@@ -27,12 +35,13 @@ function OfferItem(props: offerItemProps): JSX.Element {
           <span>Premium</span>
         </div>}
       <div className={['place-card__image-wrapper', props.imgWrapperClassName].join(' ')}>
-        <Link to={`offer/${props.offer.id}`}>
+        {/* <Link to={AppRoute.Root}> */}
+        <Link to={`${AppRoute.Room}/${props.offer.id}`}>
           <img className="place-card__image"
             src={props.offer.previewImage}
             width={props.imgWidth || 260}
             height={props.imgHeight || 200}
-            alt="Place image"
+            alt="Place"
           />
         </Link>
       </div>
@@ -42,7 +51,11 @@ function OfferItem(props: offerItemProps): JSX.Element {
             <b className="place-card__price-value">&euro;{props.offer.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className={cn('place-card__bookmark-button button', {'place-card__bookmark-button--active': props.offer.isFavorite})} type="button">
+          <button
+            className={cn('place-card__bookmark-button button', {'place-card__bookmark-button--active': isActiveBookmark})}
+            type="button"
+            onClick={toggleBookmark}
+          >
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>

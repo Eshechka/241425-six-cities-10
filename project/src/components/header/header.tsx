@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import { AppRoute, headerView } from '../../const';
+import { AppRoute, AuthorizationStatus, headerView } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { logoutAction } from '../../store/api-actions';
+import { getAuthStatus } from '../../store/user-process/selectors';
 
 type headerProps = {
   view?: headerView,
@@ -10,7 +11,7 @@ type headerProps = {
 function Header(props: headerProps): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const {authorizationStatus} = useAppSelector((state) => state);
+  const authorizationStatus = useAppSelector(getAuthStatus);
 
   return (
     <header className="header">
@@ -23,7 +24,7 @@ function Header(props: headerProps): JSX.Element {
           </div>
           <nav className="header__nav">
             <ul className="header__nav-list">
-              {authorizationStatus ?
+              {authorizationStatus === AuthorizationStatus.Auth ?
                 (
                   <>
                     <li className="header__nav-item user">
