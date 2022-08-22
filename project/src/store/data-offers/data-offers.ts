@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { NameSpace } from '../../const';
 import { DataOffers } from '../../types/state';
-import { fetchOffersAction } from '../api-actions';
+import { fetchFavoriteOffersAction, fetchOffersAction } from '../api-actions';
 
 const INIT_CITY_NAME = 'Paris';
 
@@ -23,10 +23,6 @@ export const dataOffers = createSlice({
   name: NameSpace.Offers,
   initialState,
   reducers: {
-    setFavoriteOffers: (state, action) => {
-      const { favoriteOffers } = action.payload;
-      state.favoriteOffers = favoriteOffers;
-    },
     changeCity: (state, action) => {
       const { city } = action.payload;
       state.city = city;
@@ -40,9 +36,16 @@ export const dataOffers = createSlice({
       .addCase(fetchOffersAction.fulfilled, (state, action) => {
         state.offers = action.payload;
         state.isDataLoading = false;
+      })
+      .addCase(fetchFavoriteOffersAction.pending, (state) => {
+        state.isDataLoading = true;
+      })
+      .addCase(fetchFavoriteOffersAction.fulfilled, (state, action) => {
+        state.favoriteOffers = action.payload;
+        state.isDataLoading = false;
       });
   }
 });
 
 
-export const { setFavoriteOffers, changeCity } = dataOffers.actions;
+export const { changeCity } = dataOffers.actions;

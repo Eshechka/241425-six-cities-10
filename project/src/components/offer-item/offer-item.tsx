@@ -2,6 +2,8 @@ import cn from 'classnames';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../const';
+import { useAppDispatch } from '../../hooks';
+import { changeRoomFavoriteAction } from '../../store/api-actions';
 
 import { Offer } from '../../types/offer';
 
@@ -18,9 +20,13 @@ type offerItemProps = {
 
 function OfferItem(props: offerItemProps): JSX.Element {
 
+  const dispatch = useAppDispatch();
+
   const [isActiveBookmark, setIsActiveBookmark] = useState(props.offer.isFavorite);
 
   const toggleBookmark = () => {
+    const status = isActiveBookmark ? 0 : 1;
+    dispatch(changeRoomFavoriteAction({id: props.offer.id, status: status}));
     setIsActiveBookmark((prev) => !prev);
   };
 
@@ -35,7 +41,7 @@ function OfferItem(props: offerItemProps): JSX.Element {
           <span>Premium</span>
         </div>}
       <div className={['place-card__image-wrapper', props.imgWrapperClassName].join(' ')}>
-        {/* <Link to={AppRoute.Root}> */}
+
         <Link to={`${AppRoute.Room}/${props.offer.id}`}>
           <img className="place-card__image"
             src={props.offer.previewImage}

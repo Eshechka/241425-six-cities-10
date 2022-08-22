@@ -1,3 +1,5 @@
+import style from './style.module.css';
+
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -5,7 +7,7 @@ import { AppRoute, AuthorizationStatus } from '../../const';
 
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
-import { fetchRoomAction, fetchRoomsNearbyAction, fetchRoomReviewsAction } from '../../store/api-actions';
+import { fetchRoomAction, fetchRoomsNearbyAction, fetchRoomReviewsAction, changeRoomFavoriteAction } from '../../store/api-actions';
 
 import Header from '../../components/header/header';
 import Map from '../../components/map/map';
@@ -23,22 +25,35 @@ function Room(): JSX.Element {
 
   const dispatch = useAppDispatch();
 
-  const navigate = useNavigate();
-
-  const authorizationStatus = useAppSelector(getAuthStatus);
   const room = useAppSelector(getRoom);
+  const authorizationStatus = useAppSelector(getAuthStatus);
   const roomsNearby = useAppSelector(getRoomsNearby);
   const roomReviews = useAppSelector(getRoomReviews);
   const error = useAppSelector(getNotFoundStatus);
   const isRoomDataLoading = useAppSelector(getLoadingDataRoomStatus);
-
+  const [isActiveBookmark, setIsActiveBookmark] = useState(room?.isFavorite);
   const [reviews, setReviews] = useState(roomReviews);
+
+
+  const navigate = useNavigate();
+
+
+  const toggleBookmark = () => {
+    const status = isActiveBookmark ? 0 : 1;
+    dispatch(changeRoomFavoriteAction({id, status: status}));
+    setIsActiveBookmark((prev) => !prev);
+  };
+
 
   useEffect(() => {
     if (roomReviews && roomReviews.length > 0) {
       setReviews(roomReviews.slice(0, 10));
     }
   }, [roomReviews]);
+
+  useEffect(() => {
+    setIsActiveBookmark(room?.isFavorite);
+  }, [room]);
 
   useEffect(() => {
     if (error === true) {
@@ -83,19 +98,23 @@ function Room(): JSX.Element {
                 <h1 className="property__name">
                   {room.title}
                 </h1>
-                <button className="property__bookmark-button button" type="button">
-                  <svg className="property__bookmark-icon" width="31" height="33">
+                <button
+                  className="property__bookmark-button property__bookmark-button--active button"
+                  type="button"
+                  onClick={toggleBookmark}
+                >
+                  <svg className={['property__bookmark-icon', isActiveBookmark ? style.active_bookmark : ''].join(' ')} width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
                   </svg>
-                  <span className="visually-hidden">{room.isFavorite ? 'In bookmarks' : 'To bookmarks'}</span>
+                  <span className="visually-hidden">{isActiveBookmark ? 'In bookmarks' : 'To bookmarks'}</span>
                 </button>
               </div>
               <div className="property__rating rating">
                 <div className="property__stars rating__stars">
-                  <span style={{width: `${room.rating}%`}}></span>
+                  <span style={{width: `${room.rating * 20}%`}}></span>
                   <span className="visually-hidden">Rating</span>
                 </div>
-                <span className="property__rating-value rating__value">{room.rating ? (room.rating * 5 / 100).toFixed(1) : ''}</span>
+                <span className="property__rating-value rating__value">{room.rating}</span>
               </div>
               <ul className="property__features">
                 <li className="property__feature property__feature--entire">{room.type}</li>

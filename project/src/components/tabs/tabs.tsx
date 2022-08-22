@@ -2,6 +2,7 @@ import cn from 'classnames';
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { AppRoute } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { changeCity } from '../../store/data-offers/data-offers';
 
@@ -27,7 +28,7 @@ function Tabs(props: tabsProps): JSX.Element {
             (
               <li className="locations__item" key={city.name}>
                 <Link className={cn('locations__item-link tabs__item', {'tabs__item--active': currentCity.name === city.name})}
-                  to="/"
+                  to={AppRoute.Root}
                   onClick={() => {
                     dispatch(changeCity({city}));
                     setCurrentCity(city);

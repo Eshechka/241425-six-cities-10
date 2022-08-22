@@ -66,9 +66,19 @@ export const fetchRoomReviewsAction = createAsyncThunk<Review[], string | undefi
 export const addRoomReviewAction = createAsyncThunk<Review[], { id: string, review: AddedReview }, {
   dispatch: AppDispatch, state: State, extra: AxiosInstance
 }>(
-  'room/fetchAddReview',
+  'room/addReview',
   async ({ id, review: { comment, rating } }, { dispatch, extra: api }) => {
     const { data } = await api.post<Review[]>(`${APIRoute.Comments}${id}`, { comment, rating });
+    return data;
+  },
+);
+
+export const changeRoomFavoriteAction = createAsyncThunk<Offer, { id: string | undefined, status: number }, {
+  dispatch: AppDispatch, state: State, extra: AxiosInstance
+}>(
+  'room/changeFavorite',
+  async ({ id, status }, { dispatch, extra: api }) => {
+    const { data } = await api.post<Offer>(`${APIRoute.Favorite}/${id}/${status}`);
     return data;
   },
 );

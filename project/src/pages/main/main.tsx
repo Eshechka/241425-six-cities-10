@@ -18,13 +18,14 @@ import { City } from '../../types/city';
 
 
 function Main(): JSX.Element {
+
   const dispatch = useAppDispatch();
 
   const isDataLoading = useAppSelector(getLoadingDataStatus);
   const offers = useAppSelector(getOffers);
-  const city = useAppSelector(getCity);
 
-  const [currentCity, setCurrentCity] = useState(city);
+  const [currentCity, setCurrentCity] = useState(useAppSelector(getCity));
+
   let initialCurrentCityOffers = offers.filter((offer) => offer.city.name === currentCity.name);
   const [currentCityOffers, setCurrentCityOffers] = useState(initialCurrentCityOffers);
   const [currentPoints, setCurrentPoints] = useState(currentCityOffers.map((offer) => ({location: offer.location, id: offer.id}) ));

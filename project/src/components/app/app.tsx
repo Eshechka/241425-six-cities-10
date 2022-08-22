@@ -1,6 +1,4 @@
-import { Route, Routes, Navigate } from 'react-router-dom';
-import HistoryRouter from '../history-route/history-route';
-import browserHistory from '../../browser-history';
+import { Route, Routes, Navigate, BrowserRouter } from 'react-router-dom';
 
 import { AppRoute, AuthorizationStatus } from '../../const';
 
@@ -31,7 +29,7 @@ function App(): JSX.Element {
   }
 
   return (
-    <HistoryRouter history={browserHistory}>
+    <BrowserRouter>
       <Routes>
         <Route
           path={AppRoute.Root}
@@ -62,7 +60,7 @@ function App(): JSX.Element {
           element={<NotFound />}
         />
       </Routes>
-    </HistoryRouter>
+    </BrowserRouter>
   );
 }
 
