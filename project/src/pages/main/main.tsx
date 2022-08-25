@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Header from '../../components/header/header';
 import Map from '../../components/map/map';
@@ -29,7 +29,7 @@ function Main(): JSX.Element {
   let initialCurrentCityOffers = offers.filter((offer) => offer.city.name === currentCity.name);
   const [currentCityOffers, setCurrentCityOffers] = useState(initialCurrentCityOffers);
   const [currentPoints, setCurrentPoints] = useState(currentCityOffers.map((offer) => ({location: offer.location, id: offer.id}) ));
-  const [hoveredOffer, setHoveredOffer] = useState('');
+  const [hoveredOfferId, setHoveredOfferId] = useState('');
 
   useEffect(() => {
     dispatch(fetchOffersAction());
@@ -44,42 +44,51 @@ function Main(): JSX.Element {
     setCurrentPoints(currentCityOffers.map((offer) => ({location: offer.location, id: offer.id})));
   }, [currentCityOffers]);
 
-  const onChangeTab = (newCity: City) => {
-    setCurrentCity(newCity);
-    setCurrentCityOffers(offers.filter((offer) => offer.city.name === newCity.name));
-  };
+  const onChangeTab = React.useCallback(
+    (newCity: City) => {
+      setCurrentCity(newCity);
+      setCurrentCityOffers(offers.filter((offer) => offer.city.name === newCity.name));
+    },
+    []
+  );
 
-  const onSort = (filterType: string) => {
-    switch (filterType) {
-      case 'Price: low to high':
-        setCurrentCityOffers(initialCurrentCityOffers.sort(sortPriceAsc));
-        break;
-      case 'Price: high to low':
-        setCurrentCityOffers(initialCurrentCityOffers.sort(sortPriceDesc));
-        break;
-      case 'Top rated first':
-        setCurrentCityOffers(initialCurrentCityOffers.sort(sortRatingDesc));
-        break;
-      case 'Popular':
-      default:
-        setCurrentCityOffers(initialCurrentCityOffers);
-        break;
-    }
-  };
+  const onSort = React.useCallback(
+    (filterType: string) => {
+      switch (filterType) {
+        case 'Price: low to high':
+          setCurrentCityOffers(initialCurrentCityOffers.sort(sortPriceAsc));
+          break;
+        case 'Price: high to low':
+          setCurrentCityOffers(initialCurrentCityOffers.sort(sortPriceDesc));
+          break;
+        case 'Top rated first':
+          setCurrentCityOffers(initialCurrentCityOffers.sort(sortRatingDesc));
+          break;
+        case 'Popular':
+        default:
+          setCurrentCityOffers(initialCurrentCityOffers);
+          break;
+      }
+    },
+    []
+  );
 
-  const onHoverOffer = (id: string) => {
-
-    if (id !== hoveredOffer) {
-      setHoveredOffer(id);
-    }
-  };
-  const onUnhoverOffer = (id: string) => {
-
-    if (id === hoveredOffer) {
-      setHoveredOffer('');
-    }
-  };
-
+  const onHoverOffer = React.useCallback(
+    (id: string) => {
+      if (id !== hoveredOfferId) {
+        setHoveredOfferId(id);
+      }
+    },
+    []
+  );
+  const onUnhoverOffer = React.useCallback(
+    (id: string) => {
+      if (id === hoveredOfferId) {
+        setHoveredOfferId('');
+      }
+    },
+    []
+  );
 
   if (isDataLoading === true) {
     return (
@@ -104,14 +113,14 @@ function Main(): JSX.Element {
                   <h2 className="visually-hidden">Places</h2>
                   <b className="places__found">{currentCityOffers.length} places to stay in {currentCity.name}</b>
 
-                  <Sorting onSort={ onSort } />
+                  <Sorting onSort={onSort} />
 
                   <OfferList offers={currentCityOffers} onMouseOver={onHoverOffer} onMouseLeave={onUnhoverOffer} />
 
                 </section>
                 <div className="cities__right-section">
                   <section className="cities__map map">
-                    <Map city={currentCity} points={currentPoints} activePointId={hoveredOffer}/>
+                    <Map city={currentCity} points={currentPoints} activePointId={hoveredOfferId}/>
                   </section>
                 </div>
               </div>

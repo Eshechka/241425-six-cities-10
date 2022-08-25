@@ -1,3 +1,4 @@
+import React from 'react';
 import { Offer } from '../../types/offer';
 
 import OfferItemCity from '../offer-item-city/offer-item-city';
@@ -25,4 +26,4 @@ function OfferList(props: offerListProps): JSX.Element {
   );
 }
 
-export default OfferList;
+export default React.memo(OfferList);

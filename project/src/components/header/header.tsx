@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus, headerView } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
@@ -65,4 +66,4 @@ function Header(props: headerProps): JSX.Element {
   );
 }
 
-export default Header;
+export default React.memo(Header);

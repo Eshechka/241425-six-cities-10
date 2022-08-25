@@ -1,6 +1,6 @@
 import cn from 'classnames';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
@@ -45,4 +45,4 @@ function Tabs(props: tabsProps): JSX.Element {
   );
 }
 
-export default Tabs;
+export default React.memo(Tabs);
