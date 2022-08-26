@@ -1,9 +1,10 @@
 import cn from 'classnames';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { AppRoute } from '../../const';
-import { useAppDispatch } from '../../hooks';
+import { Link, useNavigate } from 'react-router-dom';
+import { AppRoute, AuthorizationStatus } from '../../const';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { changeRoomFavoriteAction } from '../../store/api-actions';
+import { getAuthStatus } from '../../store/user-process/selectors';
 
 import { Offer } from '../../types/offer';
 
@@ -20,13 +21,19 @@ type offerItemProps = {
 
 function OfferItem(props: offerItemProps): JSX.Element {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
+  const authorizationStatus = useAppSelector(getAuthStatus);
   const [isActiveBookmark, setIsActiveBookmark] = useState(props.offer.isFavorite);
 
   const toggleBookmark = () => {
-    const status = isActiveBookmark ? 0 : 1;
-    dispatch(changeRoomFavoriteAction({id: props.offer.id, status: status}));
-    setIsActiveBookmark((prev) => !prev);
+    if (authorizationStatus === AuthorizationStatus.Auth) {
+      const status = isActiveBookmark ? 0 : 1;
+      dispatch(changeRoomFavoriteAction({id: props.offer.id, status: status}));
+      setIsActiveBookmark((prev) => !prev);
+    } else {
+      navigate(AppRoute.Login);
+    }
   };
 
   return (
