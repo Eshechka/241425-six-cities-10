@@ -9,7 +9,6 @@ type offerItemCityProps = {
 };
 
 function OfferItemCity(props: offerItemCityProps): JSX.Element {
-
   return (
     <OfferItem
       articleClassName='cities__card'

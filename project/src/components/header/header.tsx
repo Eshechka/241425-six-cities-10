@@ -7,6 +7,7 @@ import { getAuthStatus } from '../../store/user-process/selectors';
 
 type headerProps = {
   view?: headerView,
+  favoriteOffersCount?: number,
 };
 
 function Header(props: headerProps): JSX.Element {
@@ -33,7 +34,7 @@ function Header(props: headerProps): JSX.Element {
                         <div className="header__avatar-wrapper user__avatar-wrapper">
                         </div>
                         <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                        <span className="header__favorite-count">3</span>
+                        <span className="header__favorite-count">{props.favoriteOffersCount}</span>
                       </Link>
                     </li>
                     <li className="header__nav-item">

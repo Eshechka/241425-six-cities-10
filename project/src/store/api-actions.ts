@@ -76,7 +76,7 @@ export const addRoomReviewAction = createAsyncThunk<Review[], { id: string, revi
 export const changeRoomFavoriteAction = createAsyncThunk<Offer, { id: string | undefined, status: number }, {
   dispatch: AppDispatch, state: State, extra: AxiosInstance
 }>(
-  'room/changeFavorite',
+  'offers/changeFavorites',
   async ({ id, status }, { dispatch, extra: api }) => {
     const { data } = await api.post<Offer>(`${APIRoute.Favorite}/${id}/${status}`);
     return data;

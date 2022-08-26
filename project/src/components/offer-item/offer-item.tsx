@@ -19,7 +19,6 @@ type offerItemProps = {
 };
 
 function OfferItem(props: offerItemProps): JSX.Element {
-
   const dispatch = useAppDispatch();
 
   const [isActiveBookmark, setIsActiveBookmark] = useState(props.offer.isFavorite);

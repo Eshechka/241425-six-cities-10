@@ -10,7 +10,6 @@ type offerListProps = {
 };
 
 function OfferList(props: offerListProps): JSX.Element {
-
   return (
     <div className="cities__places-list places__list tabs__content">
       {props.offers && props.offers.map((offer) =>

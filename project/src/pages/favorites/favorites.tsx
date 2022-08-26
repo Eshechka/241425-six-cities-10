@@ -10,8 +10,6 @@ import { fetchFavoriteOffersAction } from '../../store/api-actions';
 import { changeCity } from '../../store/data-offers/data-offers';
 import { getFavoriteOffers, getLoadingDataStatus } from '../../store/data-offers/selectors';
 import { City } from '../../types/city';
-
-
 import { Offer } from '../../types/offer';
 
 
