@@ -5,9 +5,11 @@ import { AuthorizationStatus } from '../const';
 import { Offer } from './offer.js';
 import { Review } from './review.js';
 import { City } from './city.js';
+import { UserData } from './user.js';
 
 export type UserProcess = {
-  authorizationStatus: AuthorizationStatus
+  authorizationStatus: AuthorizationStatus,
+  userInfo: UserData | null,
 };
 export type DataOffers = {
   city: City,

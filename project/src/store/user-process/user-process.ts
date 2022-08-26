@@ -5,6 +5,7 @@ import { checkLoginAction, loginAction, logoutAction } from '../api-actions';
 
 const initialState: UserProcess = {
   authorizationStatus: AuthorizationStatus.Unknown,
+  userInfo: null,
 };
 
 export const userProcess = createSlice({
@@ -13,13 +14,15 @@ export const userProcess = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(checkLoginAction.fulfilled, (state) => {
+      .addCase(checkLoginAction.fulfilled, (state, action) => {
+        state.userInfo = action.payload;
         state.authorizationStatus = AuthorizationStatus.Auth;
       })
       .addCase(checkLoginAction.rejected, (state) => {
         state.authorizationStatus = AuthorizationStatus.NoAuth;
       })
-      .addCase(loginAction.fulfilled, (state) => {
+      .addCase(loginAction.fulfilled, (state, action) => {
+        state.userInfo = action.payload;
         state.authorizationStatus = AuthorizationStatus.Auth;
       })
       .addCase(loginAction.rejected, (state) => {

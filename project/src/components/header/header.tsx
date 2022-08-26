@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus, headerView } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { logoutAction } from '../../store/api-actions';
-import { getAuthStatus } from '../../store/user-process/selectors';
+import { getAuthStatus, getUserInfo } from '../../store/user-process/selectors';
 
 type headerProps = {
   view?: headerView,
@@ -14,6 +14,7 @@ function Header(props: headerProps): JSX.Element {
   const dispatch = useAppDispatch();
 
   const authorizationStatus = useAppSelector(getAuthStatus);
+  const userInfo = useAppSelector(getUserInfo);
 
   return (
     <header className="header">
@@ -30,10 +31,10 @@ function Header(props: headerProps): JSX.Element {
                 (
                   <>
                     <li className="header__nav-item user">
-                      <Link className="header__nav-link header__nav-link--profile" to={AppRoute.Root}>
-                        <div className="header__avatar-wrapper user__avatar-wrapper">
+                      <Link className="header__nav-link header__nav-link--profile" to={AppRoute.Favorites}>
+                        <div className="header__avatar-wrapper user__avatar-wrapper" style={{backgroundImage: `url(${userInfo?.avatarUrl})`, borderRadius: '50%'}}>
                         </div>
-                        <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
+                        <span className="header__user-name user__name">{userInfo?.email}</span>
                         <span className="header__favorite-count">{props.favoriteOffersCount}</span>
                       </Link>
                     </li>
