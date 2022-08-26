@@ -1,6 +1,6 @@
-import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom';
+import { Route, Routes, Navigate, BrowserRouter } from 'react-router-dom';
 
-import { AppRoute } from '../../const';
+import { AppRoute, AuthorizationStatus } from '../../const';
 
 import PrivateRoute from '../private-route/private-route';
 
@@ -11,6 +11,7 @@ import Room from '../../pages/room/room';
 import NotFound from '../../pages/not-found/not-found';
 
 import { checkLoginAction } from '../../store/api-actions';
+import { getAuthStatus } from '../../store/user-process/selectors';
 import { store } from '../../store';
 import { useAppSelector } from '../../hooks';
 import Spinner from '../spinner/spinner';
@@ -19,9 +20,9 @@ store.dispatch(checkLoginAction());
 
 
 function App(): JSX.Element {
-  const {authorizationStatus, isAuthorizationChecked} = useAppSelector((state) => state);
+  const authorizationStatus = useAppSelector(getAuthStatus);
 
-  if (isAuthorizationChecked === false) {
+  if (authorizationStatus === AuthorizationStatus.Unknown) {
     return (
       <Spinner/>
     );
@@ -36,7 +37,7 @@ function App(): JSX.Element {
         />
         <Route
           path={AppRoute.Login}
-          element={!authorizationStatus ? <Login /> : <Navigate to={AppRoute.Root} />}
+          element={authorizationStatus !== AuthorizationStatus.Auth ? <Login /> : <Navigate to={AppRoute.Root} />}
         />
         <Route
           path={AppRoute.Favorites}

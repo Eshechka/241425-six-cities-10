@@ -1,82 +1,112 @@
 import cn from 'classnames';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Header from '../../components/header/header';
 import Map from '../../components/map/map';
 import OfferList from '../../components/offer-list/offer-list';
+import OffersEmpty from '../../components/offers-empty/offers-empty';
 import Sorting from '../../components/sorting/sorting';
 import Spinner from '../../components/spinner/spinner';
 import Tabs from '../../components/tabs/tabs';
 
-import { CITIES, sortPriceAsc, sortPriceDesc, sortRatingDesc } from '../../const';
+import { AuthorizationStatus, CITIES, sortPriceAsc, sortPriceDesc, sortRatingDesc } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { fetchOffersAction } from '../../store/api-actions';
+import { fetchFavoriteOffersAction, fetchOffersAction } from '../../store/api-actions';
+import { getCity, getFavoriteOffers, getLoadingDataStatus, getOffers } from '../../store/data-offers/selectors';
+import { getAuthStatus } from '../../store/user-process/selectors';
+
 
 import { City } from '../../types/city';
+import { Offer } from '../../types/offer';
 
 
 function Main(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const {isDataLoaded, offers, city} = useAppSelector((state) => state);
+  const authorizationStatus = useAppSelector(getAuthStatus);
+  const isDataLoading = useAppSelector(getLoadingDataStatus);
+  const offers = useAppSelector(getOffers);
+  const favoriteOffers = useAppSelector(getFavoriteOffers);
 
-  const [currentCity, setCurrentCity] = useState(city);
-  let initialCurrentCityOffers = offers.filter((offer) => offer.city.name === currentCity.name);
+  const [currentCity, setCurrentCity] = useState(useAppSelector(getCity));
+
+  let initialCurrentCityOffers: Offer[] = [];
   const [currentCityOffers, setCurrentCityOffers] = useState(initialCurrentCityOffers);
   const [currentPoints, setCurrentPoints] = useState(currentCityOffers.map((offer) => ({location: offer.location, id: offer.id}) ));
-  const [hoveredOffer, setHoveredOffer] = useState('');
+  const [hoveredOfferId, setHoveredOfferId] = useState<string | null>(null);
+  const [favoriteOffersCount, setFavoriteOffersCount] = useState<number | null>(null);
 
   useEffect(() => {
     dispatch(fetchOffersAction());
   }, []);
 
   useEffect(() => {
+    if (authorizationStatus === AuthorizationStatus.Auth) {
+      dispatch(fetchFavoriteOffersAction());
+    }
+  }, [authorizationStatus]);
+
+  useEffect(() => {
     initialCurrentCityOffers = offers.filter((offer) => offer.city.name === currentCity.name);
     setCurrentCityOffers(initialCurrentCityOffers);
-  }, [offers]);
+  }, [offers, currentCity]);
+
+  useEffect(() => {
+    setFavoriteOffersCount(favoriteOffers.length);
+  }, [favoriteOffers]);
 
   useEffect(() => {
     setCurrentPoints(currentCityOffers.map((offer) => ({location: offer.location, id: offer.id})));
   }, [currentCityOffers]);
 
-  const onChangeTab = (newCity: City) => {
-    setCurrentCity(newCity);
-    setCurrentCityOffers(offers.filter((offer) => offer.city.name === newCity.name));
-  };
+  const onChangeTab = React.useCallback(
+    (newCity: City) => {
+      setCurrentCity(newCity);
+      setCurrentCityOffers(offers.filter((offer) => offer.city.name === newCity.name));
+    },
+    []
+  );
 
-  const onSort = (filterType: string) => {
-    switch (filterType) {
-      case 'Price: low to high':
-        setCurrentCityOffers(initialCurrentCityOffers.sort(sortPriceAsc));
-        break;
-      case 'Price: high to low':
-        setCurrentCityOffers(initialCurrentCityOffers.sort(sortPriceDesc));
-        break;
-      case 'Top rated first':
-        setCurrentCityOffers(initialCurrentCityOffers.sort(sortRatingDesc));
-        break;
-      case 'Popular':
-      default:
-        setCurrentCityOffers(initialCurrentCityOffers);
-        break;
-    }
-  };
+  const onSort = React.useCallback(
+    (filterType: string) => {
+      switch (filterType) {
+        case 'Price: low to high':
+          setCurrentCityOffers(initialCurrentCityOffers.sort(sortPriceAsc));
+          break;
+        case 'Price: high to low':
+          setCurrentCityOffers(initialCurrentCityOffers.sort(sortPriceDesc));
+          break;
+        case 'Top rated first':
+          setCurrentCityOffers(initialCurrentCityOffers.sort(sortRatingDesc));
+          break;
+        case 'Popular':
+        default:
+          setCurrentCityOffers(initialCurrentCityOffers);
+          break;
+      }
+    },
+    []
+  );
 
-  const onHoverOffer = (id: string) => {
+  const onHoverOffer = React.useCallback(
+    (id: string) => {
+      if (id !== hoveredOfferId) {
+        setHoveredOfferId(id);
+      }
+    },
+    []
+  );
+  const onUnhoverOffer = React.useCallback(
+    (id: string) => {
+      if (id === hoveredOfferId) {
+        setHoveredOfferId('');
+      }
+    },
+    []
+  );
 
-    if (id !== hoveredOffer) {
-      setHoveredOffer(id);
-    }
-  };
-  const onUnhoverOffer = (id: string) => {
 
-    if (id === hoveredOffer) {
-      setHoveredOffer('');
-    }
-  };
-
-
-  if (!isDataLoaded) {
+  if (isDataLoading === true) {
     return (
       <Spinner/>
     );
@@ -84,7 +114,7 @@ function Main(): JSX.Element {
 
   return (
     <div className="page page--gray page--main">
-      <Header />
+      {(authorizationStatus === AuthorizationStatus.Auth && favoriteOffersCount !== null) ? <Header favoriteOffersCount={favoriteOffersCount} /> : <Header />}
 
       <main className={cn('page__main page__main--index', {'page__main--index-empty': !!offers.length})}>
         <h1 className="visually-hidden">Cities</h1>
@@ -99,29 +129,18 @@ function Main(): JSX.Element {
                   <h2 className="visually-hidden">Places</h2>
                   <b className="places__found">{currentCityOffers.length} places to stay in {currentCity.name}</b>
 
-                  <Sorting onSort={ onSort } />
+                  <Sorting onSort={onSort} />
 
                   <OfferList offers={currentCityOffers} onMouseOver={onHoverOffer} onMouseLeave={onUnhoverOffer} />
 
                 </section>
                 <div className="cities__right-section">
                   <section className="cities__map map">
-                    <Map city={currentCity} points={currentPoints} activePointId={hoveredOffer}/>
+                    <Map city={currentCity} points={currentPoints} activePointId={hoveredOfferId}/>
                   </section>
                 </div>
               </div>
-            ) :
-            (
-              <div className="cities__places-container cities__places-container--empty container">
-                <section className="cities__no-places">
-                  <div className="cities__status-wrapper tabs__content">
-                    <b className="cities__status">No places to stay available</b>
-                    <p className="cities__status-description">We could not find any property available at the moment in Dusseldorf</p>
-                  </div>
-                </section>
-                <div className="cities__right-section"></div>
-              </div>
-            )}
+            ) : <OffersEmpty city={currentCity}/>}
         </div>
       </main>
     </div>);

@@ -1,3 +1,4 @@
+import React from 'react';
 import { Offer } from '../../types/offer';
 
 import OfferItemCity from '../offer-item-city/offer-item-city';
@@ -9,7 +10,6 @@ type offerListProps = {
 };
 
 function OfferList(props: offerListProps): JSX.Element {
-
   return (
     <div className="cities__places-list places__list tabs__content">
       {props.offers && props.offers.map((offer) =>
@@ -25,4 +25,4 @@ function OfferList(props: offerListProps): JSX.Element {
   );
 }
 
-export default OfferList;
+export default React.memo(OfferList);

@@ -1,19 +1,24 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../../components/header/header';
 
 import OfferItemFavorite from '../../components/offer-item-favorite/offer-item-favorite';
-import { CITIES } from '../../const';
+import Spinner from '../../components/spinner/spinner';
+import { AppRoute, CITIES } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchFavoriteOffersAction } from '../../store/api-actions';
-
-
+import { changeCity } from '../../store/data-offers/data-offers';
+import { getFavoriteOffers, getLoadingDataStatus } from '../../store/data-offers/selectors';
+import { City } from '../../types/city';
 import { Offer } from '../../types/offer';
 
 
 function Favorites(): JSX.Element {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const {favoriteOffers} = useAppSelector((state) => state);
+  const isDataLoading = useAppSelector(getLoadingDataStatus);
+  const favoriteOffers = useAppSelector(getFavoriteOffers);
 
   const cities = new Set<string>();
 
@@ -24,11 +29,18 @@ function Favorites(): JSX.Element {
     cities.add(offerItem.city.name);
   }
 
-  const favoriteCities: string[] = Array.from(cities.values());
+  const favoriteCities: City[] = CITIES.filter((city) => Array.from(cities.values()).includes(city.name));
 
   useEffect(() => {
     dispatch(fetchFavoriteOffersAction());
   }, []);
+
+
+  if (isDataLoading === true) {
+    return (
+      <Spinner/>
+    );
+  }
 
   return (
     <div className="page">
@@ -40,18 +52,24 @@ function Favorites(): JSX.Element {
             <h1 className="favorites__title">Saved listing</h1>
             <ul className="favorites__list">
 
-              {favoriteCities.map((city: string) => (
-                <li className="favorites__locations-items" key={city}>
+              {favoriteCities.map((city) => (
+                <li className="favorites__locations-items" key={city.name}>
                   <div className="favorites__locations locations locations--current">
                     <div className="locations__item">
-                      <a className="locations__item-link" href="#">
-                        <span>{city}</span>
+                      <a className="locations__item-link" href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          dispatch(changeCity({city}));
+                          navigate(AppRoute.Root);
+                        }}
+                      >
+                        <span>{city.name}</span>
                       </a>
                     </div>
                   </div>
                   <div className="favorites__places">
                     {favoriteOffers
-                      .filter((favoriteOffer : Offer) => favoriteOffer.city.name === city)
+                      .filter((favoriteOffer : Offer) => favoriteOffer.city.name === city.name)
                       .map((favoriteOffer : Offer) => (
                         <OfferItemFavorite
                           key={favoriteOffer.id}

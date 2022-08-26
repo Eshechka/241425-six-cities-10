@@ -1,6 +1,6 @@
 import cn from 'classnames';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { FilterType } from '../../const';
 
 type sortingProps = {
@@ -49,4 +49,4 @@ function Sorting(props: sortingProps): JSX.Element {
   );
 }
 
-export default Sorting;
+export default React.memo(Sorting);

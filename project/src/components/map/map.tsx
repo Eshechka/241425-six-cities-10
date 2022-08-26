@@ -37,7 +37,6 @@ function Map(props: mapProps): JSX.Element {
   });
 
   useEffect(() => {
-
     if (map) {
       props.points
         .forEach((point) => {

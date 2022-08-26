@@ -12,12 +12,12 @@ export type Offer = {
   description: string;
   type: string;
   city: City;
-  isPremium?: boolean,
+  isPremium: boolean,
   images?: string[],
   bedrooms?: number,
   maxAdults?: number,
   goods?: string[],
-  host?: Host,
+  host: Host,
   location: Location;
 };
 

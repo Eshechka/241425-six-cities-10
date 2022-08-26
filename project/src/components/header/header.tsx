@@ -1,16 +1,19 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { AppRoute, headerView } from '../../const';
+import { AppRoute, AuthorizationStatus, headerView } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { logoutAction } from '../../store/api-actions';
+import { getAuthStatus } from '../../store/user-process/selectors';
 
 type headerProps = {
   view?: headerView,
+  favoriteOffersCount?: number,
 };
 
 function Header(props: headerProps): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const {authorizationStatus} = useAppSelector((state) => state);
+  const authorizationStatus = useAppSelector(getAuthStatus);
 
   return (
     <header className="header">
@@ -23,7 +26,7 @@ function Header(props: headerProps): JSX.Element {
           </div>
           <nav className="header__nav">
             <ul className="header__nav-list">
-              {authorizationStatus ?
+              {authorizationStatus === AuthorizationStatus.Auth ?
                 (
                   <>
                     <li className="header__nav-item user">
@@ -31,7 +34,7 @@ function Header(props: headerProps): JSX.Element {
                         <div className="header__avatar-wrapper user__avatar-wrapper">
                         </div>
                         <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                        <span className="header__favorite-count">3</span>
+                        <span className="header__favorite-count">{props.favoriteOffersCount}</span>
                       </Link>
                     </li>
                     <li className="header__nav-item">
@@ -64,4 +67,4 @@ function Header(props: headerProps): JSX.Element {
   );
 }
 
-export default Header;
+export default React.memo(Header);

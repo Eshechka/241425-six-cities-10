@@ -1,10 +1,12 @@
 import cn from 'classnames';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { AppRoute } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
+import { changeCity } from '../../store/data-offers/data-offers';
 
-import { changeCity } from '../../store/action';
+import { getCity } from '../../store/data-offers/selectors';
 
 import { City } from '../../types/city';
 
@@ -14,7 +16,7 @@ type tabsProps = {
 };
 
 function Tabs(props: tabsProps): JSX.Element {
-  const [currentCity, setCurrentCity] = useState(useAppSelector((state) => state.city));
+  const [currentCity, setCurrentCity] = useState(useAppSelector(getCity));
 
   const dispatch = useAppDispatch();
 
@@ -26,7 +28,7 @@ function Tabs(props: tabsProps): JSX.Element {
             (
               <li className="locations__item" key={city.name}>
                 <Link className={cn('locations__item-link tabs__item', {'tabs__item--active': currentCity.name === city.name})}
-                  to="/"
+                  to={AppRoute.Root}
                   onClick={() => {
                     dispatch(changeCity({city}));
                     setCurrentCity(city);
@@ -43,4 +45,4 @@ function Tabs(props: tabsProps): JSX.Element {
   );
 }
 
-export default Tabs;
+export default React.memo(Tabs);
