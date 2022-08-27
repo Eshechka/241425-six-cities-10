@@ -18,6 +18,7 @@ import Spinner from '../../components/spinner/spinner';
 import { getAuthStatus } from '../../store/user-process/selectors';
 import { getLoadingDataRoomStatus, getNotFoundStatus, getRoom, getRoomReviews, getRoomsNearby } from '../../store/data-room/selectors';
 import { setNotFoundStatus } from '../../store/data-room/data-room';
+import { getFavoriteOffers } from '../../store/data-offers/selectors';
 
 
 function Room(): JSX.Element {
@@ -30,6 +31,7 @@ function Room(): JSX.Element {
   const roomsNearby = useAppSelector(getRoomsNearby);
   const roomReviews = useAppSelector(getRoomReviews);
   const error = useAppSelector(getNotFoundStatus);
+  const favoriteOffers = useAppSelector(getFavoriteOffers);
   const isRoomDataLoading = useAppSelector(getLoadingDataRoomStatus);
   const [isActiveBookmark, setIsActiveBookmark] = useState(room?.isFavorite);
   const [reviews, setReviews] = useState(roomReviews);
@@ -37,13 +39,15 @@ function Room(): JSX.Element {
 
   const navigate = useNavigate();
 
-
   const toggleBookmark = () => {
-    const status = isActiveBookmark ? 0 : 1;
-    dispatch(changeRoomFavoriteAction({id, status: status}));
-    setIsActiveBookmark((prev) => !prev);
+    if (authorizationStatus === AuthorizationStatus.Auth) {
+      const status = isActiveBookmark ? 0 : 1;
+      dispatch(changeRoomFavoriteAction({id, status: status}));
+      setIsActiveBookmark((prev) => !prev);
+    } else {
+      navigate(AppRoute.Login);
+    }
   };
-
 
   useEffect(() => {
     if (roomReviews && roomReviews.length > 0) {
@@ -74,7 +78,7 @@ function Room(): JSX.Element {
 
   return (
     <div className="page">
-      <Header />
+      <Header favoriteOffersCount={favoriteOffers.length}/>
 
       <main className="page__main page__main--property">
         <section className="property">

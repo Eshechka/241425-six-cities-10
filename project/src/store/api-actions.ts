@@ -84,26 +84,28 @@ export const changeRoomFavoriteAction = createAsyncThunk<Offer, { id: string | u
 );
 
 
-export const checkLoginAction = createAsyncThunk<void, undefined, {
+export const checkLoginAction = createAsyncThunk<UserData, undefined, {
   dispatch: AppDispatch,
   state: State,
   extra: AxiosInstance
 }>(
   'user/checkLogin',
   async (_arg, { dispatch, extra: api }) => {
-    await api.get(APIRoute.Login);
+    const { data } = await api.get(APIRoute.Login);
+    return data;
   },
 );
 
-export const loginAction = createAsyncThunk<void, AuthData, {
+export const loginAction = createAsyncThunk<UserData, AuthData, {
   dispatch: AppDispatch,
   state: State,
   extra: AxiosInstance
 }>(
   'user/login',
   async ({ login: email, password }, { dispatch, extra: api }) => {
-    const { data: { token } } = await api.post<UserData>(APIRoute.Login, { email, password });
-    saveToken(token);
+    const { data } = await api.post<UserData>(APIRoute.Login, { email, password });
+    saveToken(data.token);
+    return data;
   },
 );
 

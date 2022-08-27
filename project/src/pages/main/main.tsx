@@ -34,7 +34,6 @@ function Main(): JSX.Element {
   const [currentCityOffers, setCurrentCityOffers] = useState(initialCurrentCityOffers);
   const [currentPoints, setCurrentPoints] = useState(currentCityOffers.map((offer) => ({location: offer.location, id: offer.id}) ));
   const [hoveredOfferId, setHoveredOfferId] = useState<string | null>(null);
-  const [favoriteOffersCount, setFavoriteOffersCount] = useState<number | null>(null);
 
   useEffect(() => {
     dispatch(fetchOffersAction());
@@ -50,10 +49,6 @@ function Main(): JSX.Element {
     initialCurrentCityOffers = offers.filter((offer) => offer.city.name === currentCity.name);
     setCurrentCityOffers(initialCurrentCityOffers);
   }, [offers, currentCity]);
-
-  useEffect(() => {
-    setFavoriteOffersCount(favoriteOffers.length);
-  }, [favoriteOffers]);
 
   useEffect(() => {
     setCurrentPoints(currentCityOffers.map((offer) => ({location: offer.location, id: offer.id})));
@@ -114,7 +109,7 @@ function Main(): JSX.Element {
 
   return (
     <div className="page page--gray page--main">
-      {(authorizationStatus === AuthorizationStatus.Auth && favoriteOffersCount !== null) ? <Header favoriteOffersCount={favoriteOffersCount} /> : <Header />}
+      {authorizationStatus === AuthorizationStatus.Auth ? <Header favoriteOffersCount={favoriteOffers.length} /> : <Header />}
 
       <main className={cn('page__main page__main--index', {'page__main--index-empty': !!offers.length})}>
         <h1 className="visually-hidden">Cities</h1>
