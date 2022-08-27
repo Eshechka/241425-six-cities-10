@@ -1,5 +1,4 @@
 import cn from 'classnames';
-
 import React, { useState } from 'react';
 import { FilterType } from '../../const';
 
@@ -9,7 +8,7 @@ type sortingProps = {
 
 
 function Sorting(props: sortingProps): JSX.Element {
-  const [currentFilter, serCurrentFilter] = useState(FilterType[0]);
+  const [currentFilter, setCurrentFilter] = useState(FilterType[0]);
   const [isOpenFilter, setIsOpenFilter] = useState(false);
 
   return (
@@ -34,7 +33,7 @@ function Sorting(props: sortingProps): JSX.Element {
               tabIndex={0}
               onClick={
                 () => {
-                  serCurrentFilter(filterType);
+                  setCurrentFilter(filterType);
                   setIsOpenFilter(false);
                   props.onSort(filterType);
                 }

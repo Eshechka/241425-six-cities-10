@@ -1,24 +1,19 @@
 import style from './style.module.css';
-
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-
-import { AppRoute, AuthorizationStatus, sortReviewsDesc } from '../../const';
-
 import { useAppDispatch, useAppSelector } from '../../hooks';
-
-import { fetchRoomAction, fetchRoomsNearbyAction, fetchRoomReviewsAction, changeRoomFavoriteAction, fetchFavoriteOffersAction } from '../../store/api-actions';
-
 import Header from '../../components/header/header';
 import Map from '../../components/map/map';
 import OfferItemNear from '../../components/offer-item-near/offer-item-near';
 import ReviewForm from '../../components/review-form/review-form';
 import ReviewList from '../../components/review-list/review-list';
 import Spinner from '../../components/spinner/spinner';
+import { AppRoute, AuthorizationStatus, sortReviewsDesc } from '../../const';
 import { getAuthStatus } from '../../store/user-process/selectors';
 import { getLoadingDataRoomStatus, getNotFoundStatus, getRoom, getRoomReviews, getRoomsNearby } from '../../store/data-room/selectors';
-import { setNotFoundStatus } from '../../store/data-room/data-room';
 import { getFavoriteOffers } from '../../store/data-offers/selectors';
+import { fetchRoomAction, fetchRoomsNearbyAction, fetchRoomReviewsAction, changeRoomFavoriteAction, fetchFavoriteOffersAction } from '../../store/api-actions';
+import { setNotFoundStatus } from '../../store/data-room/data-room';
 
 
 function Room(): JSX.Element {

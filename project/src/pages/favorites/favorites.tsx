@@ -1,19 +1,17 @@
 import cn from 'classnames';
-
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import Header from '../../components/header/header';
-
 import OfferItemFavorite from '../../components/offer-item-favorite/offer-item-favorite';
 import FavoritesEmpty from '../../components/favorites-empty/favorites-empty';
 import Spinner from '../../components/spinner/spinner';
 import { AppRoute, CITIES } from '../../const';
-import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchFavoriteOffersAction } from '../../store/api-actions';
-import { changeCity } from '../../store/data-offers/data-offers';
 import { getFavoriteOffers, getLoadingDataStatus } from '../../store/data-offers/selectors';
 import { City } from '../../types/city';
 import { Offer } from '../../types/offer';
+import { changeCity } from '../../store/data-offers/data-offers';
 
 
 function Favorites(): JSX.Element {

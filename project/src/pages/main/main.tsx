@@ -23,10 +23,9 @@ function Main(): JSX.Element {
   const isDataLoading = useAppSelector(getLoadingDataStatus);
   const offers = useAppSelector(getOffers);
   const favoriteOffers = useAppSelector(getFavoriteOffers);
-
   const [currentCity, setCurrentCity] = useState(useAppSelector(getCity));
-  let initialCurrentCityOffers: Offer[] = [];
-  const [currentCityOffers, setCurrentCityOffers] = useState(initialCurrentCityOffers);
+  const [initialCurrentCityOffers, setInitialCurrentCityOffers] = useState<Offer[]>([]);
+  const [currentCityOffers, setCurrentCityOffers] = useState<Offer[]>([]);
   const [currentPoints, setCurrentPoints] = useState(currentCityOffers.map((offer) => ({location: offer.location, id: offer.id}) ));
   const [hoveredOfferId, setHoveredOfferId] = useState<string | null>(null);
 
@@ -41,8 +40,9 @@ function Main(): JSX.Element {
   }, [authorizationStatus]);
 
   useEffect(() => {
-    initialCurrentCityOffers = offers.filter((offer) => offer.city.name === currentCity.name);
-    setCurrentCityOffers(initialCurrentCityOffers);
+    const filteredOffers = offers.filter((offer) => offer.city.name === currentCity.name);
+    setInitialCurrentCityOffers(filteredOffers);
+    setCurrentCityOffers(filteredOffers);
   }, [offers, currentCity]);
 
   useEffect(() => {
@@ -52,7 +52,9 @@ function Main(): JSX.Element {
   const onChangeTab = React.useCallback(
     (newCity: City) => {
       setCurrentCity(newCity);
-      setCurrentCityOffers(offers.filter((offer) => offer.city.name === newCity.name));
+      const filteredOffers = offers.filter((offer) => offer.city.name === newCity.name);
+      setInitialCurrentCityOffers(filteredOffers);
+      setCurrentCityOffers(filteredOffers);
     },
     []
   );
@@ -61,13 +63,13 @@ function Main(): JSX.Element {
     (filterType: string) => {
       switch (filterType) {
         case 'Price: low to high':
-          setCurrentCityOffers(initialCurrentCityOffers.sort(sortPriceAsc));
+          setCurrentCityOffers([...initialCurrentCityOffers].sort(sortPriceAsc));
           break;
         case 'Price: high to low':
-          setCurrentCityOffers(initialCurrentCityOffers.sort(sortPriceDesc));
+          setCurrentCityOffers([...initialCurrentCityOffers].sort(sortPriceDesc));
           break;
         case 'Top rated first':
-          setCurrentCityOffers(initialCurrentCityOffers.sort(sortRatingDesc));
+          setCurrentCityOffers([...initialCurrentCityOffers].sort(sortRatingDesc));
           break;
         case 'Popular':
         default:
@@ -75,7 +77,7 @@ function Main(): JSX.Element {
           break;
       }
     },
-    []
+    [offers, initialCurrentCityOffers]
   );
 
   const onHoverOffer = React.useCallback(

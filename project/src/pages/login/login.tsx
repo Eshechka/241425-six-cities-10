@@ -4,9 +4,9 @@ import { useAppDispatch } from '../../hooks';
 import Header from '../../components/header/header';
 import { AppRoute, CITIES, getRandomInteger, headerView } from '../../const';
 import { AuthData } from '../../types/auth';
+import { City } from '../../types/city';
 import { loginAction } from '../../store/api-actions';
 import { changeCity } from '../../store/data-offers/data-offers';
-import { City } from '../../types/city';
 
 
 function Login(): JSX.Element {
