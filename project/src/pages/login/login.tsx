@@ -1,20 +1,19 @@
 import { FormEvent, useRef } from 'react';
-
-import { Link } from 'react-router-dom';
-
-import { AppRoute, headerView } from '../../const';
-import { AuthData } from '../../types/auth';
-
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks';
-
-import { loginAction } from '../../store/api-actions';
-
 import Header from '../../components/header/header';
+import { AppRoute, CITIES, getRandomInteger, headerView } from '../../const';
+import { AuthData } from '../../types/auth';
+import { loginAction } from '../../store/api-actions';
+import { changeCity } from '../../store/data-offers/data-offers';
+import { City } from '../../types/city';
 
 
 function Login(): JSX.Element {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
+  const randomCity: City = CITIES[getRandomInteger(0, CITIES.length - 1)];
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
 
@@ -59,9 +58,15 @@ function Login(): JSX.Element {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <Link className="locations__item-link" to={AppRoute.Root}>
-                <span>Paris</span>
-              </Link>
+              <a className="locations__item-link" href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  dispatch(changeCity({city: randomCity}));
+                  navigate(AppRoute.Root);
+                }}
+              >
+                <span>{randomCity.name}</span>
+              </a>
             </div>
           </section>
         </div>

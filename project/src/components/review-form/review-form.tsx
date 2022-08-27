@@ -1,7 +1,8 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { reviewValidation } from '../../const';
-import { useAppDispatch } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { addRoomReviewAction } from '../../store/api-actions';
+import { getReviewAddProcessStatus, getRoomReviews } from '../../store/data-room/selectors';
 
 type ReviewFormProps = {
   roomId: string,
@@ -19,7 +20,19 @@ function ReviewForm(props: ReviewFormProps): JSX.Element {
   const [isCorrectFormData, setIsCorrectFormData] = useState(false);
   const [isCorrectRating, setIsCorrectRating] = useState(false);
   const [isCorrectComment, setIsCorrectComment] = useState(false);
+  const isReviewAddProcess = useAppSelector(getReviewAddProcessStatus);
+  const reviews = useAppSelector(getRoomReviews);
+  const [reviewsCounter, setReviewsCounter] = useState<number | null>(null);
 
+  useEffect(() => {
+    if (reviews !== null) {
+      if (reviewsCounter === null) {
+        setReviewsCounter(reviews.length);
+      } else if (reviews.length > reviewsCounter) {
+        setFormData(initialformData);
+      }
+    }
+  }, [reviews]);
 
   const ratingChangeHandle = (e: ChangeEvent<HTMLInputElement>, val: string): void => {
     const {name, value} = e.target;
@@ -31,7 +44,8 @@ function ReviewForm(props: ReviewFormProps): JSX.Element {
   };
 
   const commentChangeHandle = (e: ChangeEvent<HTMLTextAreaElement>): void => {
-    const comment = e.target.value;
+    const comment = e.target.value.slice(0, reviewValidation.maxCommentLength - 1);
+
     setFormData({...formData, comment: comment});
 
     const isCorrect = !!(comment && comment.length >= reviewValidation.minCommentLength);
@@ -42,7 +56,6 @@ function ReviewForm(props: ReviewFormProps): JSX.Element {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(addRoomReviewAction({id: props.roomId, review: formData}));
-    setFormData(initialformData);
   };
 
   return (
@@ -108,15 +121,21 @@ function ReviewForm(props: ReviewFormProps): JSX.Element {
           </svg>
         </label>
       </div>
-      <textarea className="reviews__textarea form__textarea" onChange={commentChangeHandle} value={formData.comment} id="review" name="review" placeholder="Tell how was your stay, what you like and what can be improved"></textarea>
+      <textarea className="reviews__textarea form__textarea"
+        onChange={commentChangeHandle} value={formData.comment}
+        id="review" name="review"
+        placeholder="Tell how was your stay, what you like and what can be improved"
+        disabled={isReviewAddProcess}
+      >
+      </textarea>
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
-          To submit review please make sure to set <span className="reviews__star">rating</span> and describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
+          To submit review please make sure to set <span className="reviews__star">rating</span> and describe your stay with at least <b className="reviews__text-amount">{reviewValidation.minCommentLength} characters</b>.
         </p>
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={!isCorrectFormData}
+          disabled={!isCorrectFormData || isReviewAddProcess}
         >
           Submit
         </button>

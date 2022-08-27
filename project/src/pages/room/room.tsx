@@ -3,11 +3,11 @@ import style from './style.module.css';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { AppRoute, AuthorizationStatus } from '../../const';
+import { AppRoute, AuthorizationStatus, sortReviewsDesc } from '../../const';
 
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
-import { fetchRoomAction, fetchRoomsNearbyAction, fetchRoomReviewsAction, changeRoomFavoriteAction } from '../../store/api-actions';
+import { fetchRoomAction, fetchRoomsNearbyAction, fetchRoomReviewsAction, changeRoomFavoriteAction, fetchFavoriteOffersAction } from '../../store/api-actions';
 
 import Header from '../../components/header/header';
 import Map from '../../components/map/map';
@@ -25,6 +25,7 @@ function Room(): JSX.Element {
   const { id } = useParams();
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const room = useAppSelector(getRoom);
   const authorizationStatus = useAppSelector(getAuthStatus);
@@ -35,9 +36,6 @@ function Room(): JSX.Element {
   const isRoomDataLoading = useAppSelector(getLoadingDataRoomStatus);
   const [isActiveBookmark, setIsActiveBookmark] = useState(room?.isFavorite);
   const [reviews, setReviews] = useState(roomReviews);
-
-
-  const navigate = useNavigate();
 
   const toggleBookmark = () => {
     if (authorizationStatus === AuthorizationStatus.Auth) {
@@ -50,8 +48,14 @@ function Room(): JSX.Element {
   };
 
   useEffect(() => {
+    if (authorizationStatus === AuthorizationStatus.Auth) {
+      dispatch(fetchFavoriteOffersAction());
+    }
+  }, [authorizationStatus]);
+
+  useEffect(() => {
     if (roomReviews && roomReviews.length > 0) {
-      setReviews(roomReviews.slice(0, 10));
+      setReviews([...roomReviews].sort(sortReviewsDesc).slice(0, 10));
     }
   }, [roomReviews]);
 
@@ -78,7 +82,7 @@ function Room(): JSX.Element {
 
   return (
     <div className="page">
-      <Header favoriteOffersCount={favoriteOffers.length}/>
+      {authorizationStatus === AuthorizationStatus.Auth ? <Header favoriteOffersCount={favoriteOffers.length} /> : <Header />}
 
       <main className="page__main page__main--property">
         <section className="property">
@@ -166,7 +170,7 @@ function Room(): JSX.Element {
             </div>}
           </div>
           <section className="property__map map">
-            {room && <Map city={room.city} points={[{id: room.id, location: room.location}, ...roomsNearby.map((nearRoom) => ({location: nearRoom.location, id: nearRoom.id}) )]}/>}
+            {room && <Map city={room.city} activePointId={room.id} points={[{id: room.id, location: room.location, }, ...roomsNearby.map((nearRoom) => ({location: nearRoom.location, id: nearRoom.id}) )]}/>}
           </section>
         </section>
         <div className="container">

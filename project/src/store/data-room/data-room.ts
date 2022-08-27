@@ -1,13 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ErrorMessages, NameSpace } from '../../const';
 import { DataRoom } from '../../types/state';
-import { fetchRoomAction, fetchRoomReviewsAction, fetchRoomsNearbyAction } from '../api-actions';
+import { addRoomReviewAction, fetchRoomAction, fetchRoomReviewsAction, fetchRoomsNearbyAction } from '../api-actions';
 
 const initialState: DataRoom = {
   room: null,
-  roomReviews: [],
+  roomReviews: null,
   roomsNearby: [],
   isDataLoading: false,
+  isReviewAddProcess: false,
   notFoundError: false,
 };
 
@@ -26,6 +27,16 @@ export const dataRoom = createSlice({
       })
       .addCase(fetchRoomsNearbyAction.fulfilled, (state, action) => {
         state.roomsNearby = action.payload;
+      })
+      .addCase(addRoomReviewAction.pending, (state) => {
+        state.isReviewAddProcess = true;
+      })
+      .addCase(addRoomReviewAction.fulfilled, (state, action) => {
+        state.roomReviews = action.payload;
+        state.isReviewAddProcess = false;
+      })
+      .addCase(addRoomReviewAction.rejected, (state) => {
+        state.isReviewAddProcess = false;
       })
       .addCase(fetchRoomAction.pending, (state) => {
         state.isDataLoading = true;

@@ -19,9 +19,10 @@ export type DataOffers = {
 };
 export type DataRoom = {
   room: Offer | null,
-  roomReviews: Review[] | [],
+  roomReviews: Review[] | null,
   roomsNearby: Offer[] | [],
   isDataLoading: boolean,
+  isReviewAddProcess: boolean,
   notFoundError: boolean,
 };
 

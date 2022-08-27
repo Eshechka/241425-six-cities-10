@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import React, { useEffect, useState } from 'react';
-
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import Header from '../../components/header/header';
 import Map from '../../components/map/map';
 import OfferList from '../../components/offer-list/offer-list';
@@ -8,14 +8,10 @@ import OffersEmpty from '../../components/offers-empty/offers-empty';
 import Sorting from '../../components/sorting/sorting';
 import Spinner from '../../components/spinner/spinner';
 import Tabs from '../../components/tabs/tabs';
-
 import { AuthorizationStatus, CITIES, sortPriceAsc, sortPriceDesc, sortRatingDesc } from '../../const';
-import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchFavoriteOffersAction, fetchOffersAction } from '../../store/api-actions';
 import { getCity, getFavoriteOffers, getLoadingDataStatus, getOffers } from '../../store/data-offers/selectors';
 import { getAuthStatus } from '../../store/user-process/selectors';
-
-
 import { City } from '../../types/city';
 import { Offer } from '../../types/offer';
 
@@ -29,7 +25,6 @@ function Main(): JSX.Element {
   const favoriteOffers = useAppSelector(getFavoriteOffers);
 
   const [currentCity, setCurrentCity] = useState(useAppSelector(getCity));
-
   let initialCurrentCityOffers: Offer[] = [];
   const [currentCityOffers, setCurrentCityOffers] = useState(initialCurrentCityOffers);
   const [currentPoints, setCurrentPoints] = useState(currentCityOffers.map((offer) => ({location: offer.location, id: offer.id}) ));

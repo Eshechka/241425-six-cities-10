@@ -16,9 +16,9 @@ type tabsProps = {
 };
 
 function Tabs(props: tabsProps): JSX.Element {
-  const [currentCity, setCurrentCity] = useState(useAppSelector(getCity));
-
   const dispatch = useAppDispatch();
+
+  const [currentCity, setCurrentCity] = useState(useAppSelector(getCity));
 
   return (
     <div className="tabs">

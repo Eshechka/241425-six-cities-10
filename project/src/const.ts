@@ -1,4 +1,5 @@
 import { Offer } from './types/offer';
+import { Review } from './types/review';
 
 export enum AppRoute {
   Root = '/',
@@ -31,7 +32,7 @@ export const CITIES = [
     location: {
       latitude: 48.85661,
       longitude: 2.351499,
-      zoom: 20
+      zoom: 13
     }
   },
   {
@@ -39,7 +40,7 @@ export const CITIES = [
     location: {
       latitude: 50.938361,
       longitude: 6.959974,
-      zoom: 20
+      zoom: 13
     }
   },
   {
@@ -47,7 +48,7 @@ export const CITIES = [
     location: {
       latitude: 50.846557,
       longitude: 4.351697,
-      zoom: 20
+      zoom: 13
     }
   },
   {
@@ -55,7 +56,7 @@ export const CITIES = [
     location: {
       latitude: 52.37454,
       longitude: 4.897976,
-      zoom: 20
+      zoom: 13
     }
   },
   {
@@ -63,7 +64,7 @@ export const CITIES = [
     location: {
       latitude: 53.550341,
       longitude: 10.000654,
-      zoom: 20
+      zoom: 13
     }
   },
   {
@@ -71,7 +72,7 @@ export const CITIES = [
     location: {
       latitude: 51.225402,
       longitude: 6.776314,
-      zoom: 20
+      zoom: 13
     }
   },
 ];
@@ -79,6 +80,14 @@ export const CITIES = [
 export const sortPriceDesc = (offerA: Offer, offerB: Offer) => offerB.price - offerA.price;
 export const sortPriceAsc = (offerA: Offer, offerB: Offer) => offerA.price - offerB.price;
 export const sortRatingDesc = (offerA: Offer, offerB: Offer) => offerB.rating - offerA.rating;
+export const sortReviewsDesc = (reviewA: Review, reviewB: Review) => Date.parse(reviewB.date) - Date.parse(reviewA.date);
+
+export const getRandomInteger = (a = 0, b = 1) => {
+  const lower = Math.ceil(Math.min(a, b));
+  const upper = Math.floor(Math.max(a, b));
+
+  return Math.floor(lower + Math.random() * (upper - lower + 1));
+};
 
 export enum APIRoute {
   Hotels = '/hotels',
@@ -97,6 +106,7 @@ export enum headerView {
 export const reviewValidation = {
   ratingGt: 0,
   minCommentLength: 50,
+  maxCommentLength: 300,
 };
 
 export enum ErrorMessages {
