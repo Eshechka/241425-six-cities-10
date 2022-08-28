@@ -1,6 +1,21 @@
 import { Offer } from './types/offer';
 import { Review } from './types/review';
 
+
+export enum APIRoute {
+  Hotels = '/hotels',
+  Login = '/login',
+  Logout = '/logout',
+  Favorite = '/favorite',
+  Room = '/hotels/',
+  Comments = '/comments/'
+}
+
+export enum headerView {
+  WAuth = 'with-auth',
+  WOAuth = 'without-auth',
+}
+
 export enum AppRoute {
   Root = '/',
   Login = '/login',
@@ -16,22 +31,30 @@ export enum FilterType {
   TopRatedFirst = 'Top rated first',
 }
 
+export enum ErrorMessages {
+  Code404 = 'Request failed with status code 404',
+}
+
+export enum NameSpace {
+  Data = 'DATA',
+  Room = 'ROOM',
+  Offers = 'OFFERS',
+  User = 'USER',
+}
+
+export enum AuthorizationStatus {
+  Auth = 'AUTH',
+  NoAuth = 'NO_AUTH',
+  Unknown = 'UNKNOWN',
+}
+
+
 export const FilterTypes = [
   FilterType.Popular,
   FilterType.PriceLowToHigh,
   FilterType.PriceHighToLow,
   FilterType.TopRatedFirst,
 ];
-
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-export const formatDate = (data: string): string => {
-  const formatData = new Date(data);
-
-  return `${MONTHS[formatData.getMonth()]} ${formatData.getFullYear()}`;
-};
-
-export const URL_MARKER_DEFAULT = '/img/pin.svg';
-export const URL_MARKER_CURRENT = '/img/pin-active.svg';
 
 export const CITIES = [
   {
@@ -84,9 +107,39 @@ export const CITIES = [
   },
 ];
 
+export const reviewValidation = {
+  ratingGt: 0,
+  minCommentLength: 50,
+  maxCommentLength: 300,
+};
+
+export const authValidation = {
+  login: {
+    regexp: /\S+@\S+\.\S+/,
+  },
+  password: {
+    regexp: /([0-9].*[a-z])|([a-z].*[0-9])/,
+  },
+};
+
+export const URL_MARKER_DEFAULT = '/img/pin.svg';
+
+export const URL_MARKER_CURRENT = '/img/pin-active.svg';
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+export const formatDate = (data: string): string => {
+  const formatData = new Date(data);
+
+  return `${MONTHS[formatData.getMonth()]} ${formatData.getFullYear()}`;
+};
+
 export const sortPriceDesc = (offerA: Offer, offerB: Offer) => offerB.price - offerA.price;
+
 export const sortPriceAsc = (offerA: Offer, offerB: Offer) => offerA.price - offerB.price;
+
 export const sortRatingDesc = (offerA: Offer, offerB: Offer) => offerB.rating - offerA.rating;
+
 export const sortReviewsDesc = (reviewA: Review, reviewB: Review) => Date.parse(reviewB.date) - Date.parse(reviewA.date);
 
 export const getRandomInteger = (a = 0, b = 1) => {
@@ -96,39 +149,3 @@ export const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-export enum APIRoute {
-  Hotels = '/hotels',
-  Login = '/login',
-  Logout = '/logout',
-  Favorite = '/favorite',
-  Room = '/hotels/',
-  Comments = '/comments/'
-}
-
-export enum headerView {
-  WAuth = 'with-auth',
-  WOAuth = 'without-auth',
-}
-
-export const reviewValidation = {
-  ratingGt: 0,
-  minCommentLength: 50,
-  maxCommentLength: 300,
-};
-
-export enum ErrorMessages {
-  Code404 = 'Request failed with status code 404',
-}
-
-export enum NameSpace {
-  Data = 'DATA',
-  Room = 'ROOM',
-  Offers = 'OFFERS',
-  User = 'USER',
-}
-
-export enum AuthorizationStatus {
-  Auth = 'AUTH',
-  NoAuth = 'NO_AUTH',
-  Unknown = 'UNKNOWN',
-}

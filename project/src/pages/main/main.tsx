@@ -99,7 +99,7 @@ function Main(): JSX.Element {
     []
   );
 
-  if (isDataLoading === true) {
+  if (isDataLoading) {
     return (
       <Spinner/>
     );

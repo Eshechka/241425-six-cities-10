@@ -37,7 +37,7 @@ function Favorites(): JSX.Element {
   }, []);
 
 
-  if (isDataLoading === true) {
+  if (isDataLoading) {
     return (
       <Spinner/>
     );

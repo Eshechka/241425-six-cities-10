@@ -1,8 +1,8 @@
-import { FormEvent, useRef } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks';
 import Header from '../../components/header/header';
-import { AppRoute, CITIES, getRandomInteger, headerView } from '../../const';
+import { AppRoute, authValidation, CITIES, getRandomInteger, headerView } from '../../const';
 import { AuthData } from '../../types/auth';
 import { City } from '../../types/city';
 import { loginAction } from '../../store/api-actions';
@@ -17,6 +17,11 @@ function Login(): JSX.Element {
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
 
+  const [isLoginIncorrect, setIsLoginIncorrect] = useState<boolean | null>(null);
+  const [isPasswordIncorrect, setIsPasswordIncorrect] = useState<boolean | null>(null);
+  const [loginLength, setLoginLength] = useState(loginRef.current?.value.length);
+  const [passwordLength, setPasswordLength] = useState(passwordRef.current?.value.length);
+
   const onSubmit = (authData: AuthData) => {
     dispatch(loginAction(authData));
   };
@@ -25,10 +30,17 @@ function Login(): JSX.Element {
     evt.preventDefault();
 
     if (loginRef.current !== null && passwordRef.current !== null) {
-      onSubmit({
-        login: loginRef.current.value,
-        password: passwordRef.current.value,
-      });
+      const isLoginCorrect = authValidation.login.regexp.test(loginRef.current.value);
+      setIsLoginIncorrect(!isLoginCorrect);
+      const isPasswordCorrect = authValidation.password.regexp.test(passwordRef.current.value);
+      setIsPasswordIncorrect(!isPasswordCorrect);
+
+      if (isLoginCorrect && isPasswordCorrect) {
+        onSubmit({
+          login: loginRef.current.value,
+          password: passwordRef.current.value,
+        });
+      }
     }
   };
 
@@ -47,13 +59,30 @@ function Login(): JSX.Element {
             >
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">E-mail</label>
-                <input ref={loginRef} className="login__input form__input" type="email" name="email" placeholder="Email" required/>
+                <span style={{fontSize: '10px', color: 'red', display: `${isLoginIncorrect === true ? 'block' : 'none'}`}}>Введите корректный email</span>
+                <input ref={loginRef}
+                  onChange={(e) => setLoginLength(e.target.value.length)}
+                  className="login__input form__input"
+                  type="email" name="email" placeholder="Email"
+                  required
+                />
               </div>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">Password</label>
-                <input ref={passwordRef} className="login__input form__input" type="password" name="password" placeholder="Password" required/>
+                <span style={{fontSize: '10px', color: 'red', display: `${isPasswordIncorrect === true ? 'block' : 'none'}`}}>Пароль должен содержать хотя бы одну букву и одну цифру</span>
+                <input ref={passwordRef}
+                  onChange={(e) => setPasswordLength(e.target.value.length)}
+                  className="login__input form__input"
+                  type="password" name="password" placeholder="Password"
+                  required
+                />
               </div>
-              <button className="login__submit form__submit button" type="submit">Sign in</button>
+              <button className="login__submit form__submit button"
+                type="submit"
+                disabled={!loginLength || !passwordLength}
+              >
+                  Sign in
+              </button>
             </form>
           </section>
           <section className="locations locations--login locations--current">

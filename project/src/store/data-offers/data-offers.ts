@@ -51,7 +51,7 @@ export const dataOffers = createSlice({
       .addCase(changeRoomFavoriteAction.fulfilled, (state, action) => {
         const changedOffer = action.payload;
 
-        if (changedOffer.isFavorite === true) {
+        if (changedOffer.isFavorite) {
           state.favoriteOffers = [...state.favoriteOffers, changedOffer];
         } else {
           state.favoriteOffers = [...state.favoriteOffers.filter((item) => item.id !== changedOffer.id)];

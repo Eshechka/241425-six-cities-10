@@ -59,7 +59,7 @@ function Room(): JSX.Element {
   }, [room]);
 
   useEffect(() => {
-    if (error === true) {
+    if (error) {
       navigate(AppRoute.NotFound);
       dispatch(setNotFoundStatus(false));
     }
