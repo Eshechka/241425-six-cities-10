@@ -9,11 +9,18 @@ export enum AppRoute {
   NotFound = '/404',
 }
 
-export const FilterType = [
-  'Popular',
-  'Price: low to high',
-  'Price: high to low',
-  'Top rated first'
+export enum FilterType {
+  Popular = 'Popular',
+  PriceLowToHigh = 'Price: low to high',
+  PriceHighToLow = 'Price: high to low',
+  TopRatedFirst = 'Top rated first',
+}
+
+export const FilterTypes = [
+  FilterType.Popular,
+  FilterType.PriceLowToHigh,
+  FilterType.PriceHighToLow,
+  FilterType.TopRatedFirst,
 ];
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];

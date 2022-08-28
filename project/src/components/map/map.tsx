@@ -6,17 +6,13 @@ import useMap from '../../hooks/use-map/use-map';
 
 import { URL_MARKER_DEFAULT, URL_MARKER_CURRENT } from '../../const';
 
-
 import { City } from '../../types/city';
-import { Location } from '../../types/location';
+import { Point } from '../../types/point';
 
 
 type mapProps = {
   city: City,
-  points: {
-    location: Location,
-    id: string,
-  }[],
+  points: Point[],
   activePointId?: string | null,
 };
 

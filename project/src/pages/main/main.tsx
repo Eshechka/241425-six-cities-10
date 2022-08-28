@@ -8,12 +8,13 @@ import OffersEmpty from '../../components/offers-empty/offers-empty';
 import Sorting from '../../components/sorting/sorting';
 import Spinner from '../../components/spinner/spinner';
 import Tabs from '../../components/tabs/tabs';
-import { AuthorizationStatus, CITIES, sortPriceAsc, sortPriceDesc, sortRatingDesc } from '../../const';
+import { AuthorizationStatus, CITIES, FilterType, sortPriceAsc, sortPriceDesc, sortRatingDesc } from '../../const';
 import { fetchFavoriteOffersAction, fetchOffersAction } from '../../store/api-actions';
 import { getCity, getFavoriteOffers, getLoadingDataStatus, getOffers } from '../../store/data-offers/selectors';
 import { getAuthStatus } from '../../store/user-process/selectors';
 import { City } from '../../types/city';
 import { Offer } from '../../types/offer';
+import { Point } from '../../types/point';
 
 
 function Main(): JSX.Element {
@@ -24,9 +25,11 @@ function Main(): JSX.Element {
   const offers = useAppSelector(getOffers);
   const favoriteOffers = useAppSelector(getFavoriteOffers);
   const [currentCity, setCurrentCity] = useState(useAppSelector(getCity));
+
   const [initialCurrentCityOffers, setInitialCurrentCityOffers] = useState<Offer[]>([]);
   const [currentCityOffers, setCurrentCityOffers] = useState<Offer[]>([]);
-  const [currentPoints, setCurrentPoints] = useState(currentCityOffers.map((offer) => ({location: offer.location, id: offer.id}) ));
+  const [filterType, setFilterType] = useState<FilterType>(FilterType.Popular);
+  const [currentPoints, setCurrentPoints] = useState<Point[] | []>([]);
   const [hoveredOfferId, setHoveredOfferId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -52,30 +55,29 @@ function Main(): JSX.Element {
   const onChangeTab = React.useCallback(
     (newCity: City) => {
       setCurrentCity(newCity);
-      const filteredOffers = offers.filter((offer) => offer.city.name === newCity.name);
-      setInitialCurrentCityOffers(filteredOffers);
-      setCurrentCityOffers(filteredOffers);
+      setFilterType(FilterType.Popular);
     },
     []
   );
 
   const onSort = React.useCallback(
-    (filterType: string) => {
-      switch (filterType) {
-        case 'Price: low to high':
+    (newFilterType: FilterType) => {
+      switch (newFilterType) {
+        case FilterType.PriceLowToHigh:
           setCurrentCityOffers([...initialCurrentCityOffers].sort(sortPriceAsc));
           break;
-        case 'Price: high to low':
+        case FilterType.PriceHighToLow:
           setCurrentCityOffers([...initialCurrentCityOffers].sort(sortPriceDesc));
           break;
-        case 'Top rated first':
+        case FilterType.TopRatedFirst:
           setCurrentCityOffers([...initialCurrentCityOffers].sort(sortRatingDesc));
           break;
-        case 'Popular':
+        case FilterType.Popular:
         default:
-          setCurrentCityOffers(initialCurrentCityOffers);
+          setCurrentCityOffers([...initialCurrentCityOffers]);
           break;
       }
+      setFilterType(newFilterType);
     },
     [offers, initialCurrentCityOffers]
   );
@@ -96,7 +98,6 @@ function Main(): JSX.Element {
     },
     []
   );
-
 
   if (isDataLoading === true) {
     return (
@@ -121,7 +122,7 @@ function Main(): JSX.Element {
                   <h2 className="visually-hidden">Places</h2>
                   <b className="places__found">{currentCityOffers.length} places to stay in {currentCity.name}</b>
 
-                  <Sorting onSort={onSort} />
+                  <Sorting filterBy={filterType} onSort={onSort} />
 
                   <OfferList offers={currentCityOffers} onMouseOver={onHoverOffer} onMouseLeave={onUnhoverOffer} />
 

@@ -1,15 +1,20 @@
 import cn from 'classnames';
-import React, { useState } from 'react';
-import { FilterType } from '../../const';
+import React, { useEffect, useState } from 'react';
+import { FilterType, FilterTypes } from '../../const';
 
 type sortingProps = {
-  onSort: (filterType: string) => void
+  onSort: (newFilterType: FilterType) => void,
+  filterBy: FilterType,
 };
 
 
 function Sorting(props: sortingProps): JSX.Element {
-  const [currentFilter, setCurrentFilter] = useState(FilterType[0]);
+  const [currentFilter, setCurrentFilter] = useState(props.filterBy);
   const [isOpenFilter, setIsOpenFilter] = useState(false);
+
+  useEffect(() => {
+    setCurrentFilter(props.filterBy);
+  }, [props.filterBy]);
 
   return (
     <form className="places__sorting" action="#" method="get">
@@ -26,7 +31,7 @@ function Sorting(props: sortingProps): JSX.Element {
       </span>
       <ul className={cn('places__options places__options--custom', {'places__options--opened': isOpenFilter})}>
         {
-          FilterType.map((filterType) => (
+          FilterTypes.map((filterType) => (
             <li
               key={filterType}
               className={cn('places__option', {'places__option--active':  currentFilter === filterType})}
